@@ -5,7 +5,10 @@ import jakarta.persistence.*;
 
 @Data
 @Entity
-@Table(name = "message_icons")
+@Table(name = "message_icons",
+        uniqueConstraints = {
+            @UniqueConstraint(columnNames = {"message_id", "icon_id"})
+        })
 public class MessageIcon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
