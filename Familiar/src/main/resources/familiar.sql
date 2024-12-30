@@ -156,6 +156,7 @@ CREATE TABLE friendships
     user_id1      INT NOT NULL,
     user_id2      INT NOT NULL,
     is_deleted    BOOLEAN   DEFAULT FALSE,
+
     is_accepted   BOOLEAN   DEFAULT FALSE,
     created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -168,18 +169,21 @@ CREATE TABLE friendships
 -- Messages table (cập nhật)
 CREATE TABLE messages
 (
-    message_id     INT AUTO_INCREMENT PRIMARY KEY,
-    sender_user_id INT  NOT NULL,
+    message_id       INT AUTO_INCREMENT PRIMARY KEY,
+    sender_user_id   INT  NOT NULL,
     receiver_user_id INT  NOT NULL,
-    content        TEXT NOT NULL,
-    message_type   VARCHAR(20) DEFAULT 'TEXT',
-    is_read        BOOLEAN     DEFAULT FALSE,
-    is_deleted     BOOLEAN     DEFAULT FALSE,
-    created_at     TIMESTAMP   DEFAULT CURRENT_TIMESTAMP,
-    updated_at     TIMESTAMP   DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    content          TEXT NOT NULL,
+    message_type     VARCHAR(20) DEFAULT 'TEXT',
+    is_read          BOOLEAN     DEFAULT FALSE,
+    is_deleted       BOOLEAN     DEFAULT FALSE,
+    session_id       VARCHAR(255),
+    is_sent          BOOLEAN     DEFAULT FALSE,
+    created_at       TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP(3),
+    updated_at       TIMESTAMP(3) DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
     FOREIGN KEY (receiver_user_id) REFERENCES users (user_id),
     FOREIGN KEY (sender_user_id) REFERENCES users (user_id)
 );
+
 
 -- Message_Icons table (mới)
 CREATE TABLE message_icons
