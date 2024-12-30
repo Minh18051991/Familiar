@@ -3,6 +3,7 @@ package org.example.familiar.model;
 import lombok.Data;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @Entity
@@ -38,6 +39,14 @@ public class Message {
 
     @Column(name = "session_id")
     private String sessionId;
+
+    @ManyToMany
+    @JoinTable(
+        name = "message_icons",
+        joinColumns = @JoinColumn(name = "message_id"),
+        inverseJoinColumns = @JoinColumn(name = "icon_id")
+    )
+    private Set<Icon> icons;
 
     @Column(name = "created_at", columnDefinition = "TIMESTAMP(3)")
     private LocalDateTime createdAt;

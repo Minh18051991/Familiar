@@ -3,6 +3,7 @@ package org.example.familiar.model;
 import lombok.Data;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @Entity
@@ -13,17 +14,20 @@ public class Icon {
     @Column(name = "icon_id")
     private Integer iconId;
 
-    @Column(name = "icon_url", nullable = false, length = 255)
+    @Column(name = "icon_url", nullable = false)
     private String iconUrl;
 
-    @Column(name = "icon_name", nullable = false, length = 50)
+    @Column(name = "icon_name", nullable = false)
     private String iconName;
 
-    @Column(name = "icon_type", nullable = false, length = 20)
+    @Column(name = "icon_type", nullable = false)
     private String iconType;
 
     @Column(name = "is_deleted")
     private Boolean isDeleted = false;
+
+    @ManyToMany(mappedBy = "icons")
+    private Set<Message> messages;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
