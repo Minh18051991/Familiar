@@ -9,7 +9,7 @@ import jakarta.persistence.*;
 public class MessageIcon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "message_icon_id")
+    @Column(name = "message_icons_id")
     private Integer messageIconId;
 
     @ManyToOne
