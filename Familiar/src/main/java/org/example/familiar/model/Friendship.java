@@ -11,8 +11,7 @@ import java.time.LocalDateTime;
 public class Friendship {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "friendship_id")
-    private Integer friendshipId;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "user_id1", nullable = false)

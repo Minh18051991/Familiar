@@ -11,8 +11,7 @@ import java.util.Set;
 public class Icon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "icon_id")
-    private Integer iconId;
+    private Integer id;
 
     @Column(name = "icon_url", nullable = false)
     private String iconUrl;
