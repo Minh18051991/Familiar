@@ -8,12 +8,16 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "post_icons")
 public class PostIcon {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @Id
+
     @ManyToOne
     @JoinColumn(name = "icon_id")
     private Icon icon;

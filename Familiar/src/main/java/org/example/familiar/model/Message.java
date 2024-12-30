@@ -10,8 +10,7 @@ import java.time.LocalDateTime;
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "message_id")
-    private Integer messageId;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "sender_user_id", nullable = false)
