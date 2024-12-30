@@ -188,9 +188,10 @@ CREATE TABLE messages
 -- Message_Icons table (mới)
 CREATE TABLE message_icons
 (
+    message_icons_id INT AUTO_INCREMENT PRIMARY KEY,
     message_id INT NOT NULL,
     icon_id    INT NOT NULL,
-    PRIMARY KEY (message_id, icon_id),
+    UNIQUE KEY unique_message_icon (message_id, icon_id),
     FOREIGN KEY (message_id) REFERENCES messages (message_id),
     FOREIGN KEY (icon_id) REFERENCES icons (icon_id)
 );
