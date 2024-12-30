@@ -1,18 +1,20 @@
 package org.example.familiar.model;
 
-import lombok.Data;
 import jakarta.persistence.*;
+import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "comment_icons")
 public class CommentIcon {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
     @ManyToOne
     @JoinColumn(name = "comment_id")
     private Comment comment;
 
-    @Id
     @ManyToOne
     @JoinColumn(name = "icon_id")
     private Icon icon;

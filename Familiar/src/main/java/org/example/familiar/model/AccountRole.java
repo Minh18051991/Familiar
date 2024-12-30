@@ -7,12 +7,16 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "account_roles")
 public class AccountRole {
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
     @ManyToOne
     @JoinColumn(name = "account_id")
     private Account account;
 
-    @Id
+
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;

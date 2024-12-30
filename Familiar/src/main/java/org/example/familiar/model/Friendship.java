@@ -6,12 +6,12 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "friendships")
+@Table(name = "friendships",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id1", "user_id2"}))
 public class Friendship {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "friendship_id")
-    private Integer friendshipId;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "user_id1", nullable = false)

@@ -10,8 +10,7 @@ import java.time.LocalDateTime;
 public class Icon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "icon_id")
-    private Integer iconId;
+    private Integer id;
 
     @Column(name = "icon_url", nullable = false, length = 255)
     private String iconUrl;

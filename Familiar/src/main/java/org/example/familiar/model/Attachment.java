@@ -11,8 +11,7 @@ import java.time.LocalDateTime;
 public class Attachment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "attachment_id")
-    private Integer attachmentId;
+    private Integer id;
 
     @ManyToOne
     @JoinColumn(name = "post_id", nullable = false)
