@@ -37,8 +37,8 @@ public class AccountService implements IAccountService {
     }
 
     public void updateAccount(Account account) {
-        Account accountToUpdate = accountRepository.findByUsername(account.getUsername());
-        accountToUpdate.setPassword(account.getPassword());
-        accountRepository.save(accountToUpdate);
+        Account updatedAccount = accountRepository.findByUsername(account.getUsername());
+        updatedAccount.setPassword(account.getPassword());
+        accountRepository.save(updatedAccount);
     }
 }
