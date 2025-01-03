@@ -1,8 +1,8 @@
 package org.example.familiar.service.user;
 
-import org.example.familiar.model.User;
+import org.example.familiar.dto.userDTO.UserDTO;
+import org.example.familiar.dto.userDTO.UserDTOImpl;
 
 public interface IUserService {
-    void createUser(User user);
-    User getUserById(int id);
+    UserDTO findById(Integer id);
 }

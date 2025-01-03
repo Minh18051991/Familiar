@@ -13,22 +13,22 @@ public class Account {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne
-    @JoinColumn(name = "user_id")
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(name = "username", nullable = false, unique = true, length = 50)
     private String username;
 
     @Column(name = "password_hash", nullable = false, length = 255)
-    private String password;
+    private String passwordHash;
 
     @Column(name = "is_active")
     private Boolean isActive = true;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private AccountStatus status = AccountStatus.normal;
+    private AccountStatus status = AccountStatus.NORMAL;
 
     @Column(name = "lock_time")
     private LocalDateTime lockTime;
@@ -40,6 +40,6 @@ public class Account {
     private LocalDateTime lastLogin;
 
     public enum AccountStatus {
-        normal, warned, blocked
+        NORMAL, WARNED, BLOCKED
     }
 }
