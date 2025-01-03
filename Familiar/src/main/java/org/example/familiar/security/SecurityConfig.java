@@ -3,12 +3,16 @@ package org.example.familiar.security;
 import org.example.familiar.config.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 @EnableWebSecurity
@@ -17,38 +21,46 @@ public class SecurityConfig {
 //    @Bean
 //    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 //        http
-//                .csrf(csrf -> csrf.disable()) // JWT không yêu cầu CSRF
-//                .sessionManagement(session -> session
-//                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Không sử dụng session
-//                )
+//                .csrf(csrf -> csrf.disable())
+//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 //                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/login", "/dashboard").permitAll() // Các endpoint công khai
-////                        .requestMatchers("/blog/create").hasRole("USER") // Yêu cầu quyền truy cập
-////                        .anyRequest().authenticated() // Các yêu cầu còn lại cần xác thực
-//                );
-////                .addFilter(new JwtAuthenticationFilter()) // Bộ lọc xác thực JWT
-////                .addFilter(new JwtAuthorizationFilter()); // Bộ lọc phân quyền dựa trên JWT
+//                        .requestMatchers("/api/auth/login","/api/register/account/create","/api/user/create","/api/register/account/check-username","/api/user/detail/1").permitAll()
+//                        .anyRequest().authenticated()
+//                )
+//                .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);
 //
 //        return http.build();
 //    }
+@Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    http
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Cho phép OPTIONS
+                    .requestMatchers("/api/auth/login", "/api/register/account/create",
+                            "/api/user/create", "/api/register/account/check-username",
+                            "/api/user/detail/14").permitAll()
+                    .anyRequest().authenticated()
+            )
+            .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);
 
+    return http.build();
+}
 
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/dashboard").permitAll()
-                        .anyRequest().authenticated()
-                )
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .defaultSuccessUrl("/dashboard",true)
-                )
-                .csrf(csrf -> csrf.disable())
-                .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class); // Thêm dòng này
-
-        return http.build();
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE","OPTIONS")
+                        .allowedOrigins("http://localhost:3000")
+                        .allowedHeaders("*")
+                        .exposedHeaders("Authorization") ;
+            }
+        };
     }
 
     @Bean
@@ -62,23 +74,4 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf().disable()
-//                .authorizeHttpRequests(auth -> auth
-//                        .requestMatchers("/login", "/register", "/").permitAll()
-//                        .anyRequest().authenticated()
-//                )
-//                .formLogin().loginPage("/login").defaultSuccessUrl("/dashboard", true).permitAll()
-//                .and()
-//                .logout().logoutSuccessUrl("/login").permitAll();
-//
-//        return http.build();
-//    }
-//
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
 }
