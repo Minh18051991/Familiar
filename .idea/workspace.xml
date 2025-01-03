@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0f6e613e-3919-426c-8081-d061842454d3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Familiar/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/Familiar/build.gradle" afterDir="false" />
-    </list>
+    <list default="true" id="0f6e613e-3919-426c-8081-d061842454d3" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -41,10 +39,10 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "hung",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "E:/codegym/module6/front_end/familiar_frontend/familiar",
+    "last_opened_file_path": "E:/codegym/module6/Familiar/Familiar",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -57,6 +55,21 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="Familiar" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="Familiar" />
+      <option name="filePath" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -76,6 +89,7 @@
       <workItem from="1735548817258" duration="278000" />
       <workItem from="1735549122350" duration="4000" />
       <workItem from="1735549144050" duration="560000" />
+      <workItem from="1735567497467" duration="30000" />
     </task>
     <servers />
   </component>
