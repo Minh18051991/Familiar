@@ -23,7 +23,7 @@ CREATE TABLE users
 CREATE TABLE accounts
 (
     id    INT AUTO_INCREMENT PRIMARY KEY,
-    user_id       INT                NOT NULL,
+    user_id       INT                ,
     username      VARCHAR(50) UNIQUE NOT NULL,
     password_hash VARCHAR(255)       NOT NULL,
     is_active     BOOLEAN                            DEFAULT TRUE,
@@ -214,3 +214,50 @@ CREATE TABLE message_icons
     #     FOREIGN KEY (user_id_accused) REFERENCES users (user_id),
     #     FOREIGN KEY (denunciation_categories_id) REFERENCES denunciation_categories (id)
     # );
+
+
+INSERT INTO users (first_name, last_name, email, profile_picture_url, bio)
+VALUES
+    ('John', 'Doe', 'john.doe@example.com', 'https://example.com/john.jpg', 'I love technology and coding!'),
+    ('Jane', 'Smith', 'jane.smith@example.com', 'https://example.com/jane.jpg', 'Passionate about art and design.');
+
+INSERT INTO posts (user_id, content)
+VALUES
+    (1, 'Just finished a great coding session! #programming'),
+    (2, 'Check out my latest art piece! What do you think?'),
+    (1, 'Looking for recommendations on good programming books. Any suggestions?');
+
+-- Comments for the first post
+INSERT INTO comments (post_id, user_id, content)
+VALUES
+    (1, 2, 'That''s awesome! What were you working on?');
+
+INSERT INTO comments (post_id, user_id, parent_comment_id, content)
+VALUES
+    (1, 1, 1, 'I was building a new feature for my personal project. It''s coming along nicely!');
+
+INSERT INTO comments (post_id, user_id, parent_comment_id, content)
+VALUES
+    (1, 2, 2, 'Sounds interesting! Can''t wait to see it when it''s done.');
+
+-- Comments for the second post
+INSERT INTO comments (post_id, user_id, content)
+VALUES
+    (2, 1, 'Wow, your art is amazing! I love the colors you used.');
+
+INSERT INTO comments (post_id, user_id, parent_comment_id, content)
+VALUES
+    (2, 2, 4, 'Thank you so much! I was experimenting with a new color palette.');
+
+-- Comments for the third post
+INSERT INTO comments (post_id, user_id, content)
+VALUES
+    (3, 2, 'I highly recommend "Clean Code" by Robert C. Martin. It''s a classic!');
+
+INSERT INTO comments (post_id, user_id, parent_comment_id, content)
+VALUES
+    (3, 1, 6, 'Thanks for the suggestion! I''ll definitely check it out.');
+
+INSERT INTO comments (post_id, user_id, content)
+VALUES
+    (3, 2, 'Another great one is "The Pragmatic Programmer" by Andrew Hunt and David Thomas.');

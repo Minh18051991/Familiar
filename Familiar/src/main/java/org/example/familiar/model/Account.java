@@ -14,7 +14,7 @@ public class Account {
     private Integer id;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @Column(name = "username", nullable = false, unique = true, length = 50)

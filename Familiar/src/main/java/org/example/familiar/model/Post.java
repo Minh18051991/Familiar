@@ -39,4 +39,15 @@ public class Post {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
+    public Integer getUserId() {
+        return user.getId();
+    }
+    public void setUserId(Integer userId) {
+        this.user = new User();
+        this.user.setId(userId);
+    }
+    public void setUser(User user) {
+        this.user = user;
+    }
 }
