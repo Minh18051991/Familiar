@@ -35,4 +35,10 @@ public class AccountService implements IAccountService {
     public boolean checkUsernameExists(String username) {
         return accountRepository.findByUsername(username)==null;
     }
+
+    public void updateAccount(Account account) {
+        Account accountToUpdate = accountRepository.findByUsername(account.getUsername());
+        accountToUpdate.setPassword(account.getPassword());
+        accountRepository.save(accountToUpdate);
+    }
 }

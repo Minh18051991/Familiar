@@ -7,4 +7,5 @@ public interface IAccountService {
     Account getAccountByUsernameAndPassword(Login login);
     Account createAccount(Account account);
     boolean checkUsernameExists(String username);
+    void updateAccount(Account account);
 }
