@@ -52,10 +52,6 @@ CREATE TABLE account_roles
     FOREIGN KEY (role_id) REFERENCES roles (id)
 );
 
--- Thêm các vai trò mặc định (giữ nguyên như cũ)
-INSERT INTO roles (role_name)
-VALUES ('USER'),
-       ('ADMIN');
 
 -- Icons table (mới)
 CREATE TABLE icons
@@ -215,49 +211,76 @@ CREATE TABLE message_icons
     #     FOREIGN KEY (denunciation_categories_id) REFERENCES denunciation_categories (id)
     # );
 
+select roles.role_name from accounts
+                                join account_roles on accounts.id = account_roles.account_id
+                                join roles on account_roles.role_id = roles.id
+where accounts.id =10;
 
-INSERT INTO users (first_name, last_name, email, profile_picture_url, bio)
+-- Thêm các vai trò mặc định (giữ nguyên như cũ)
+INSERT INTO roles (role_name)
+VALUES ('USER'),
+       ('ADMIN');
+
+-- Thêm dữ liệu vào bảng users
+INSERT INTO users (first_name, last_name, email, profile_picture_url, bio, date_of_birth, gender, occupation, address)
 VALUES
-    ('John', 'Doe', 'john.doe@example.com', 'https://example.com/john.jpg', 'I love technology and coding!'),
-    ('Jane', 'Smith', 'jane.smith@example.com', 'https://example.com/jane.jpg', 'Passionate about art and design.');
+    ('John', 'Doe', 'john.doe@example.com', 'http://example.com/john.jpg', 'I am John', '1990-01-01', 'Male', 'Developer', '123 Main St'),
+    ('Jane', 'Smith', 'jane.smith@example.com', 'http://example.com/jane.jpg', 'I am Jane', '1992-05-15', 'Female', 'Designer', '456 Elm St'),
+    ('Mike', 'Johnson', 'mike.johnson@example.com', 'http://example.com/mike.jpg', 'I am Mike', '1988-09-30', 'Male', 'Manager', '789 Oak St');
 
+-- Thêm dữ liệu vào bảng accounts
+INSERT INTO accounts ( user_id,username, password_hash)
+VALUES
+    ( 1,'admin', '$2a$10$TAiGrWHCzOq5WJDtYDODZOzVxXvnTzCGwNxJ6xTvVN8f/kpQm0pDO'),
+    ( 2,'user', '$2a$10$TAiGrWHCzOq5WJDtYDODZOzVxXvnTzCGwNxJ6xTvVN8f/kpQm0pDO'),
+    ( 2,'user2', '$2a$10$TAiGrWHCzOq5WJDtYDODZOzVxXvnTzCGwNxJ6xTvVN8f/kpQm0pDO');
+
+-- Thêm dữ liệu vào bảng account_roles
+INSERT INTO account_roles (account_id, role_id)
+VALUES
+    (1, 1), -- John Doe as USER
+    (2, 1), -- Jane Smith as USER
+    (3, 2); -- Mike Johnson as ADMIN
+
+-- Thêm dữ liệu vào bảng posts
 INSERT INTO posts (user_id, content)
 VALUES
-    (1, 'Just finished a great coding session! #programming'),
-    (2, 'Check out my latest art piece! What do you think?'),
-    (1, 'Looking for recommendations on good programming books. Any suggestions?');
+    (1, 'This is my first post!'),
+    (2, 'Hello world from Jane!'),
+    (3, 'Greetings from the admin!');
 
--- Comments for the first post
+-- Thêm dữ liệu vào bảng comments
 INSERT INTO comments (post_id, user_id, content)
 VALUES
-    (1, 2, 'That''s awesome! What were you working on?');
+    (1, 2, 'Great first post, John!'),
+    (2, 3, 'Welcome, Jane!'),
+    (3, 1, 'Thanks for the update, admin!');
 
-INSERT INTO comments (post_id, user_id, parent_comment_id, content)
+-- Thêm dữ liệu vào bảng friendships
+INSERT INTO friendships (user_id1, user_id2, is_accepted)
 VALUES
-    (1, 1, 1, 'I was building a new feature for my personal project. It''s coming along nicely!');
+    (1, 2, TRUE),
+    (1, 3, FALSE),
+    (2, 3, TRUE);
 
-INSERT INTO comments (post_id, user_id, parent_comment_id, content)
+-- Thêm dữ liệu vào bảng messages
+INSERT INTO messages (sender_user_id, receiver_user_id, content)
 VALUES
-    (1, 2, 2, 'Sounds interesting! Can''t wait to see it when it''s done.');
+    (1, 2, 'Hey Jane, how are you?'),
+    (2, 1, 'Hi John, Im doing great!'),
+    (3, 1, 'Hello John, this is an admin message.');
 
--- Comments for the second post
-INSERT INTO comments (post_id, user_id, content)
+-- Thêm dữ liệu vào bảng icons
+INSERT INTO icons (icon_url, icon_name, icon_type)
 VALUES
-    (2, 1, 'Wow, your art is amazing! I love the colors you used.');
+    ('http://example.com/like.png', 'Like', 'Reaction'),
+    ('http://example.com/heart.png', 'Heart', 'Reaction'),
+    ('http://example.com/laugh.png', 'Laugh', 'Reaction');
 
-INSERT INTO comments (post_id, user_id, parent_comment_id, content)
+-- Thêm dữ liệu vào bảng likes
+INSERT INTO likes (user_id, post_id, icon_id)
 VALUES
-    (2, 2, 4, 'Thank you so much! I was experimenting with a new color palette.');
+    (1, 2, 1), -- John likes Jane's post with a Like icon
+    (2, 1, 2), -- Jane likes John's post with a Heart icon
+    (3, 1, 3); -- Admin likes John's post with a Laugh icon
 
--- Comments for the third post
-INSERT INTO comments (post_id, user_id, content)
-VALUES
-    (3, 2, 'I highly recommend "Clean Code" by Robert C. Martin. It''s a classic!');
-
-INSERT INTO comments (post_id, user_id, parent_comment_id, content)
-VALUES
-    (3, 1, 6, 'Thanks for the suggestion! I''ll definitely check it out.');
-
-INSERT INTO comments (post_id, user_id, content)
-VALUES
-    (3, 2, 'Another great one is "The Pragmatic Programmer" by Andrew Hunt and David Thomas.');
