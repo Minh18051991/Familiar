@@ -13,7 +13,7 @@ import java.io.IOException;
 @Configuration
 public class FirebaseConfig {
 
-    @Value("${firebase.storage.bucket}")
+    @Value("${firebase.bucket-name}")
     private String storageBucket;
 
     @Bean

@@ -3,6 +3,8 @@ package org.example.familiar.model;
 
 import lombok.Data;
 import jakarta.persistence.*;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 
 @Data
@@ -13,6 +15,7 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Setter
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -46,8 +49,5 @@ public class Post {
     public void setUserId(Integer userId) {
         this.user = new User();
         this.user.setId(userId);
-    }
-    public void setUser(User user) {
-        this.user = user;
     }
 }

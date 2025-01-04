@@ -44,10 +44,13 @@ public class JwtUtils {
             return false;
         }
     }
-
-
-
-
+    public Integer getUserIdFromToken(String token) {
+        return Integer.parseInt(Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject());
+    }
 }
 
 
