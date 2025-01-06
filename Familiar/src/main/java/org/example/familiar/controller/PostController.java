@@ -8,11 +8,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import jakarta.validation.Valid;
-import java.io.IOException;
-import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
@@ -28,12 +23,15 @@ public class PostController {
         return ResponseEntity.ok(posts);
     }
 
-    @PostMapping
-    public ResponseEntity<PostDTO> createPost(@RequestPart("post") @Valid PostDTO postDTO,
-                                              @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
-        PostDTO createdPost = postService.createPost(postDTO, files);
-        return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
+@PostMapping
+public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDTO) {
+    try {
+        PostDTO createdPost = postService.createPost(postDTO);
+        return ResponseEntity.ok(createdPost);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
+}
 
     @GetMapping("/{id}")
     public ResponseEntity<PostDTO> getPostById(@PathVariable Integer id) {
@@ -43,15 +41,15 @@ public class PostController {
 
     @PutMapping("/{id}")
     public ResponseEntity<PostDTO> updatePost(@PathVariable Integer id,
-                                              @RequestBody @Valid PostDTO postDTO,
-                                              @RequestHeader("userId") Integer userId) {
+                                              @RequestBody PostDTO postDTO,
+                                              @RequestHeader("User-Id") Integer userId) {
         PostDTO updatedPost = postService.updatePost(id, postDTO, userId);
         return ResponseEntity.ok(updatedPost);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable Integer id,
-                                           @RequestHeader("userId") Integer userId) {
+                                           @RequestHeader("User-Id") Integer userId) {
         postService.deletePost(id, userId);
         return ResponseEntity.noContent().build();
     }

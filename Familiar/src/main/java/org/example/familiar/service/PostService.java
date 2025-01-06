@@ -12,16 +12,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import static java.rmi.server.LogStream.log;
-
 @Service
 public class PostService {
 
@@ -42,39 +36,33 @@ public class PostService {
         return posts.map(this::convertToDTO);
     }
 
-    @Transactional
-    public PostDTO createPost(PostDTO postDTO, List<MultipartFile> files) throws IOException {
+  @Transactional
+public PostDTO createPost(PostDTO postDTO) {
+    User user = userRepository.findById(postDTO.getUserId())
+            .orElseThrow(() -> new RuntimeException("User not found"));
 
-       System.out.println("PostDTO: " + postDTO);
-       System.out.println("file: " + files);
-        User user = userRepository.findById(postDTO.getUserId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    Post post = new Post();
+    post.setUser(user);
+    post.setContent(postDTO.getContent());
+    post.setCreatedAt(LocalDateTime.now());
+    post.setUpdatedAt(LocalDateTime.now());
 
-        Post post = new Post();
-        post.setUser(user);
-        post.setContent(postDTO.getContent());
-        post.setCreatedAt(LocalDateTime.now());
-        post.setUpdatedAt(LocalDateTime.now());
+    post = postRepository.save(post);
 
-        post = postRepository.save(post);
-
-        List<Attachment> attachments = new ArrayList<>();
-        if (files != null && !files.isEmpty()) {
-            for (MultipartFile file : files) {
-                String fileUrl = firebaseStorageService.uploadFile(file);
-                Attachment attachment = new Attachment();
-                attachment.setPost(post);
-                attachment.setFileUrl(fileUrl);
-                attachment.setFileName(file.getOriginalFilename());
-                attachment.setFileType(file.getContentType());
-                attachment.setFileSize((int) file.getSize());
-                attachments.add(attachment);
-            }
-            attachmentRepository.saveAll(attachments);
+    List<Attachment> attachments = new ArrayList<>();
+    if (postDTO.getAttachmentUrls() != null && !postDTO.getAttachmentUrls().isEmpty()) {
+        for (String url : postDTO.getAttachmentUrls()) {
+            Attachment attachment = new Attachment();
+            attachment.setPost(post);
+            attachment.setFileUrl(url);
+            // You might want to extract filename and other details from the URL if possible
+            attachments.add(attachment);
         }
-
-        return convertToDTO(post);
+        attachmentRepository.saveAll(attachments);
     }
+
+    return convertToDTO(post);
+}
 
     public PostDTO getPostById(Integer id) {
         Post post = postRepository.findById(id)
