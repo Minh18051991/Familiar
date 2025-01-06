@@ -38,7 +38,8 @@ public class AccountService implements IAccountService {
 
     public void updateAccount(Account account) {
         Account updatedAccount = accountRepository.findByUsername(account.getUsername());
-        updatedAccount.setPassword(account.getPassword());
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        updatedAccount.setPassword(passwordEncoder.encode(account.getPassword()));
         accountRepository.save(updatedAccount);
     }
 }

@@ -10,6 +10,15 @@ public class AuthRespone {
     private List<String> role;
     private String profilePictureUrl;
     private Integer userId;
+    private String gender;
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
 
     public Integer getUserId() {
         return userId;
@@ -39,12 +48,13 @@ public class AuthRespone {
         this.token = token;
     }
 
-    public AuthRespone(String token, String username, List<String> role,String profilePictureUrl, Integer userId) {
+    public AuthRespone(String token, String username, List<String> role,String profilePictureUrl, Integer userId,String gender) {
         this.token = token;
         this.username = username;
         this.role = role;
         this.profilePictureUrl = profilePictureUrl;
         this.userId = userId;
+        this.gender = gender;
     }
 
     public String getToken() {

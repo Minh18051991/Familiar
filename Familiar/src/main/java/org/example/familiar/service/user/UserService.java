@@ -37,4 +37,8 @@ public class UserService implements IUserService {
     public User getUserById(int id) {
         return userRepository.findById(id).orElse(null);
     }
+
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
 }

@@ -35,6 +35,7 @@ public class AuthController {
     @Autowired
     private IUserService userService;
 
+
     @PostMapping("/login")
     public ResponseEntity<?>authenticate(@RequestBody Login login) throws Exception {
 
@@ -44,7 +45,7 @@ public class AuthController {
             User user = userService.getUserById(account.getUser().getId());
             String token = jwtUtil.generateToken(login.getUsername());
             List<String> role = accountRepository.findRoleNamesByAccountId(account.getId());
-            AuthRespone authRespone = new AuthRespone(token,account.getUsername(), role,user.getProfilePictureUrl(),account.getUser().getId());
+            AuthRespone authRespone = new AuthRespone(token,account.getUsername(), role,user.getProfilePictureUrl(),account.getUser().getId(),user.getGender());
             return new ResponseEntity<>(authRespone, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("token", HttpStatus.BAD_REQUEST);
@@ -63,6 +64,4 @@ public class AuthController {
 
         return new ResponseEntity<>(username, HttpStatus.OK);
     }
-
-
 }

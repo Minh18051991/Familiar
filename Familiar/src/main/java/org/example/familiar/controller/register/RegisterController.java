@@ -2,7 +2,9 @@ package org.example.familiar.controller.register;
 
 import org.example.familiar.dto.account.AccountDTO;
 import org.example.familiar.model.Account;
+import org.example.familiar.model.User;
 import org.example.familiar.service.account.IAccountService;
+import org.example.familiar.service.user.IUserService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,12 +19,17 @@ public class RegisterController {
     @Autowired
     private IAccountService accountService;
 
+    @Autowired
+    private IUserService userService;
+
     // Tạo tài khoản
     @PostMapping("/account/create")
     public ResponseEntity<?> authenticate(@RequestBody AccountDTO accountDTO) throws Exception {
 
         Account account = new Account();
         BeanUtils.copyProperties(accountDTO, account);
+        User user = userService.getUserById(accountDTO.getUserId() );
+        account.setUser(user);
         if (accountService.createAccount(account) != null) {
 
             return new ResponseEntity<>(account, HttpStatus.OK);
