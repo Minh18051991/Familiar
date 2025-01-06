@@ -40,7 +40,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Cho phép OPTIONS
                     .requestMatchers("/api/auth/login", "/api/register/account/create",
                             "/api/user/create", "/api/register/account/check-username",
-                            "/api/user/detail/14").permitAll()
+                            "/api/user/detail/14","/api/posts","/api/posts/**","/api/comments/**","/api/posts/{id}/comments","/api/comments/{id}/**").permitAll()
                     .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);
@@ -58,7 +58,7 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
                         .allowedMethods("GET", "POST", "PUT", "DELETE","OPTIONS")
                         .allowedOrigins("http://localhost:3000")
                         .allowedHeaders("*")
-                        .exposedHeaders("Authorization") ;
+                        .exposedHeaders("Authorization","Content-Type") ;
             }
         };
     }

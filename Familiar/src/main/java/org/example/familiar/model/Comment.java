@@ -20,8 +20,15 @@ public class Comment {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "parent_comment_id")
+    private Comment parentComment;
+
     @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     private String content;
+
+    @Column(name = "level")
+    private Integer level = 0;
 
     @Column(name = "is_deleted")
     private Boolean isDeleted = false;
