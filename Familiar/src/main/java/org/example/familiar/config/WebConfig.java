@@ -20,7 +20,7 @@ public void addCorsMappings(org.springframework.web.servlet.config.annotation.Co
            .allowedOrigins("http://localhost:3000") // Thay đổi này thành URL chính xác của frontend
            .allowedMethods("GET", "POST", "PUT", "DELETE")
            .allowedHeaders("*")
-           .exposedHeaders("Authorization","Content-Type")
+           .exposedHeaders("Authorization")
            .allowCredentials(true);
 }
 }
