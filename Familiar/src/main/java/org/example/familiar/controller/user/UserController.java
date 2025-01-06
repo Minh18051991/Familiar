@@ -19,9 +19,10 @@ public class UserController {
     public ResponseEntity<?> authenticate(@RequestBody User user) throws Exception {
 
         userService.createUser(user);
+        User newUser = userService.getUserByEmail(user.getEmail()); // Kiểm tra email đã tồn tại hay chưa
 
 
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(newUser, HttpStatus.OK);
 
 
     }

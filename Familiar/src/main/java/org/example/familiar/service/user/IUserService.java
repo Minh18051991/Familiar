@@ -8,4 +8,5 @@ public interface IUserService {
     UserDTO findById(Integer id);
     void createUser(User user);
     User getUserById(int id);
+    User getUserByEmail(String email);
 }
