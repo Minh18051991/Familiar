@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.rmi.server.LogStream.log;
+
 @Service
 public class PostService {
 
@@ -42,6 +44,9 @@ public class PostService {
 
     @Transactional
     public PostDTO createPost(PostDTO postDTO, List<MultipartFile> files) throws IOException {
+
+       System.out.println("PostDTO: " + postDTO);
+       System.out.println("file: " + files);
         User user = userRepository.findById(postDTO.getUserId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 

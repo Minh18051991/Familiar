@@ -2,7 +2,6 @@ package org.example.familiar.controller;
 
 import org.example.familiar.dto.PostDTO;
 import org.example.familiar.service.PostService;
-import org.example.familiar.config.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,15 +15,12 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 @RequestMapping("/api/posts")
 public class PostController {
 
     @Autowired
     private PostService postService;
-
-    @Autowired
-    private JwtUtils jwtUtils;
 
     @GetMapping
     public ResponseEntity<Page<PostDTO>> getAllPosts(Pageable pageable) {
@@ -34,10 +30,7 @@ public class PostController {
 
     @PostMapping
     public ResponseEntity<PostDTO> createPost(@RequestPart("post") @Valid PostDTO postDTO,
-                                              @RequestPart(value = "files", required = false) List<MultipartFile> files,
-                                              @RequestHeader("Authorization") String token) throws IOException {
-        Integer userId = jwtUtils.getUserIdFromToken(token);
-        postDTO.setUserId(userId);
+                                              @RequestPart(value = "files", required = false) List<MultipartFile> files) throws IOException {
         PostDTO createdPost = postService.createPost(postDTO, files);
         return new ResponseEntity<>(createdPost, HttpStatus.CREATED);
     }
@@ -51,16 +44,14 @@ public class PostController {
     @PutMapping("/{id}")
     public ResponseEntity<PostDTO> updatePost(@PathVariable Integer id,
                                               @RequestBody @Valid PostDTO postDTO,
-                                              @RequestHeader("Authorization") String token) {
-        Integer userId = jwtUtils.getUserIdFromToken(token);
+                                              @RequestHeader("userId") Integer userId) {
         PostDTO updatedPost = postService.updatePost(id, postDTO, userId);
         return ResponseEntity.ok(updatedPost);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePost(@PathVariable Integer id,
-                                           @RequestHeader("Authorization") String token) {
-        Integer userId = jwtUtils.getUserIdFromToken(token);
+                                           @RequestHeader("userId") Integer userId) {
         postService.deletePost(id, userId);
         return ResponseEntity.noContent().build();
     }
