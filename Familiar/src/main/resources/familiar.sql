@@ -263,24 +263,5 @@ VALUES
     (1, 3, FALSE),
     (2, 3, TRUE);
 
--- Thêm dữ liệu vào bảng messages
-INSERT INTO messages (sender_user_id, receiver_user_id, content)
-VALUES
-    (1, 2, 'Hey Jane, how are you?'),
-    (2, 1, 'Hi John, Im doing great!'),
-    (3, 1, 'Hello John, this is an admin message.');
 
--- Thêm dữ liệu vào bảng icons
-INSERT INTO icons (icon_url, icon_name, icon_type)
-VALUES
-    ('http://example.com/like.png', 'Like', 'Reaction'),
-    ('http://example.com/heart.png', 'Heart', 'Reaction'),
-    ('http://example.com/laugh.png', 'Laugh', 'Reaction');
-
--- Thêm dữ liệu vào bảng likes
-INSERT INTO likes (user_id, post_id, icon_id)
-VALUES
-    (1, 2, 1), -- John likes Jane's post with a Like icon
-    (2, 1, 2), -- Jane likes John's post with a Heart icon
-    (3, 1, 3); -- Admin likes John's post with a Laugh icon
 
