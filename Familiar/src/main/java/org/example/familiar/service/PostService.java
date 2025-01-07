@@ -4,6 +4,7 @@ import org.example.familiar.dto.PostDTO;
 import org.example.familiar.model.Post;
 import org.example.familiar.model.User;
 import org.example.familiar.model.Attachment;
+import org.example.familiar.repository.CommentRepository;
 import org.example.familiar.repository.PostRepository;
 import org.example.familiar.repository.user.IUserRepository;
 import org.example.familiar.repository.AttachmentRepository;
@@ -30,6 +31,9 @@ public class PostService {
 
     @Autowired
     private FirebaseStorageService firebaseStorageService;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     public Page<PostDTO> getAllPosts(Pageable pageable) {
         Page<Post> posts = postRepository.findAll(pageable);
@@ -116,6 +120,7 @@ public PostDTO createPost(PostDTO postDTO) {
                 .stream()
                 .map(Attachment::getFileUrl)
                 .collect(Collectors.toList());
+        Long commentCount = getCommentCount(post.getId());
 
         return new PostDTO(
                 post.getId(),
@@ -128,7 +133,11 @@ public PostDTO createPost(PostDTO postDTO) {
                 post.getCreatedAt(),
                 post.getUpdatedAt(),
                 null,  // We don't need to return MultipartFile objects
-                attachmentUrls
+                attachmentUrls,
+                commentCount  // Include comment count in the response from the service method to improve efficiency and reduce the number of database queries in the controller method  // Include comment count in the response from the service method to improve efficiency and reduce the number of database queries in the controller method  // Include comment count in the response from the service method to improve efficiency and reduce the number of database queries in the controller method  // Include comment count in the response from the service method to improve efficiency and reduce the number
         );
+    }
+    private Long getCommentCount(Integer postId) {
+        return commentRepository.countByPostId(postId);
     }
 }

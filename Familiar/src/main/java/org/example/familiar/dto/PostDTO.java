@@ -19,6 +19,7 @@ public class PostDTO {
     private LocalDateTime updatedAt;
     private List<MultipartFile> attachments;
     private List<String> attachmentUrls;
+    private Long commentCount;
 
     // Constructors
 
@@ -27,7 +28,7 @@ public class PostDTO {
     public PostDTO(Integer id, Integer userId, String userFirstName, String userLastName, 
                    String userProfilePictureUrl, String content, Boolean isDeleted, 
                    LocalDateTime createdAt, LocalDateTime updatedAt, 
-                   List<MultipartFile> attachments, List<String> attachmentUrls) {
+                   List<MultipartFile> attachments, List<String> attachmentUrls, Long commentCount) {
         this.id = id;
         this.userId = userId;
         this.userFirstName = userFirstName;
@@ -39,6 +40,7 @@ public class PostDTO {
         this.updatedAt = updatedAt;
         this.attachments = attachments;
         this.attachmentUrls = attachmentUrls;
+        this.commentCount = commentCount;
     }
 
     // Getters and Setters
@@ -129,5 +131,11 @@ public class PostDTO {
 
     public void setAttachmentUrls(List<String> attachmentUrls) {
         this.attachmentUrls = attachmentUrls;
+    }
+    public Long getCommentCount() {
+        return commentCount;
+    }
+    public void setCommentCount(Long commentCount) {
+        this.commentCount = commentCount;
     }
 }
