@@ -11,6 +11,5 @@ import java.util.Optional;
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
     List<Comment> findByPostIdAndParentCommentIsNullOrderByCreatedAtDesc(Integer postId);
     List<Comment> findByParentCommentIdOrderByCreatedAtAsc(Integer parentId);
-
-    Optional<Comment> findByIdAndIsDeletedFalse(Integer commentId);
+    Long countByPostId(Integer postId);
 }
