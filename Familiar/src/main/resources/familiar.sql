@@ -270,3 +270,37 @@ VALUES
     (13, 'Hoang Ngoc Huyen shares financial advice.'),
     (14, 'Truong Minh Hung discusses education.'),
     (15, 'Nguyen Quang Thinh shares software development insights.');
+
+-- Thêm dữ liệu mẫu vào bảng comments
+INSERT INTO comments (post_id, user_id, parent_comment_id, content, level)
+VALUES
+    (1, 2, NULL, 'Great post, Nguyen Van An!', 0),
+    (1, 3, 1, 'I agree with you, Tran Thi Bich.', 1),
+    (2, 1, NULL, 'Interesting thoughts, Tran Thi Bich.', 0),
+    (2, 4, 3, 'Thanks for sharing!', 1),
+    (3, 5, NULL, 'Amazing design, Le Van Canh!', 0),
+    (3, 6, 5, 'I love it!', 1),
+    (4, 7, NULL, 'Very informative, Pham Thi Dung.', 0),
+    (4, 8, 7, 'Thanks for the insights.', 1),
+    (5, 9, NULL, 'Great challenges, Bui Ngoc Trung.', 0),
+    (5, 10, 9, 'Well said!', 1),
+    (6, 11, NULL, 'Thanks for the advice, Hoang Ngoc Hung.', 0),
+    (6, 12, 11, 'Very helpful.', 1),
+    (7, 13, NULL, 'Important discussion, Hoang Ngoc Huyen.', 0),
+    (7, 14, 13, 'I agree with your points.', 1),
+    (8, 15, NULL, 'Great experiences, Pham Van Tien.', 0),
+    (8, 1, 15, 'Thanks for sharing.', 1),
+    (9, 2, NULL, 'Healthcare is crucial, Le Quang Hung.', 0),
+    (9, 3, 2, 'Absolutely.', 1),
+    (10, 4, NULL, 'Interesting engineering insights, Nguyen Trung Dung.', 0),
+    (10, 5, 4, 'Thanks for the information.', 1),
+    (11, 6, NULL, 'Great programming tips, Nguyen Hoang Duong.', 0),
+    (11, 7, 6, 'Very useful.', 1),
+    (12, 8, NULL, 'Banking is important, Bui Thi Hanh.', 0),
+    (12, 9, 8, 'Indeed.', 1),
+    (13, 10, NULL, 'Financial advice is valuable, Hoang Ngoc Huyen.', 0),
+    (13, 11, 10, 'Thanks for sharing.', 1),
+    (14, 12, NULL, 'Education is key, Truong Minh Hung.', 0),
+    (14, 13, 12, 'Absolutely.', 1),
+    (15, 14, NULL, 'Great software development insights, Nguyen Quang Thinh.', 0),
+    (15, 15, 14, 'Very informative.', 1);
