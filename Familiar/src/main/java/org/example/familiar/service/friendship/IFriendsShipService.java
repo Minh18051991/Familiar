@@ -2,6 +2,8 @@ package org.example.familiar.service.friendship;
 
 import org.example.familiar.dto.userDTO.UserDTO;
 import org.example.familiar.model.Friendship;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -19,4 +21,8 @@ public interface IFriendsShipService {
     Friendship cancelFriendship(Integer userId1, Integer userId2);
 
     List<UserDTO> suggestedFriendsList(Integer userId1, Integer userId2);
+
+    Page<UserDTO> suggestedFriendsListPage(Integer userId1, Integer userId2, Pageable pageable);
+
+    List<UserDTO> friendRequestList(Integer userId);
 }
