@@ -2,6 +2,8 @@ package org.example.familiar.repository.friendship;
 
 import org.example.familiar.dto.userDTO.UserDTO;
 import org.example.familiar.model.Friendship;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -58,4 +60,41 @@ public interface IFriendRepository extends JpaRepository<Friendship, Integer> {
             "  AND f2.is_deleted = FALSE\n" +
             "  AND f2.is_accepted = TRUE;\n", nativeQuery = true)
     List<UserDTO> suggestedFriendsList (@Param("userId1") Integer userId1, @Param("userId2") Integer userId2);
+
+    @Query(value = "SELECT DISTINCT u.id AS userId, u.first_name as userFirstName, u.last_name as userLastName, u.profile_picture_url as userProfilePictureUrl\n" +
+            "FROM friendships f2\n" +
+            "JOIN users u ON u.id = CASE\n" +
+            "                        WHEN f2.user_id1 = :userId2 THEN f2.user_id2\n" +
+            "                        WHEN f2.user_id2 = :userId2 THEN f2.user_id1\n" +
+            "                      END\n" +
+            "WHERE u.id NOT IN (\n" +
+            "    SELECT DISTINCT CASE\n" +
+            "                        WHEN f1.user_id1 = :userId1 THEN f1.user_id2\n" +
+            "                        WHEN f1.user_id2 = :userId1 THEN f1.user_id1\n" +
+            "                    END\n" +
+            "    FROM friendships f1\n" +
+            "    WHERE (:userId1 IN (f1.user_id1, f1.user_id2))\n" +
+            "      AND f1.is_deleted = FALSE\n" +
+            "      AND f1.is_accepted = TRUE\n" +
+            "    UNION\n" +
+            "    SELECT DISTINCT CASE\n" +
+            "                        WHEN f1.user_id1 = :userId1 THEN f1.user_id2\n" +
+            "                        WHEN f1.user_id2 = :userId1 THEN f1.user_id1\n" +
+            "                    END\n" +
+            "    FROM friendships f1\n" +
+            "    WHERE (:userId1 IN (f1.user_id1, f1.user_id2))\n" +
+            "      AND f1.is_deleted = FALSE\n" +
+            "      AND f1.is_accepted = FALSE\n" +
+            ")\n" +
+            "  AND u.id != :userId1 \n" +
+            "  AND (:userId2 IN (f2.user_id1, f2.user_id2))\n" +
+            "  AND f2.is_deleted = FALSE\n" +
+            "  AND f2.is_accepted = TRUE;\n", nativeQuery = true)
+    Page<UserDTO> suggestedFriendsListPage (@Param("userId1") Integer userId1, @Param("userId2") Integer userId2, Pageable pageable);
+
+    @Query(value = "SELECT u.id AS userId, u.first_name as userFirstName, u.last_name as userLastName, u.profile_picture_url as userProfilePictureUrl\n" +
+            "FROM users u\n" +
+            "JOIN friendships f on f.user_id1 = u.id\n" +
+            "where f.user_id2 = :userId AND f.is_accepted = FALSE AND f.is_deleted = FALSE;", nativeQuery = true)
+    List<UserDTO> friendRequestList (@Param("userId") Integer userId);
 }
