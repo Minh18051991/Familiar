@@ -105,12 +105,33 @@ public class RestFriendShipController {
     }
 
     @GetMapping("/request/{userId}")
-    public ResponseEntity<List<UserDTO>> friendRequestList(@PathVariable("userId") Integer userId) {
-        List<UserDTO> listFriendRequest = friendshipService.friendRequestList(userId);
+    public ResponseEntity<Page<UserDTO>> friendRequestList(@PathVariable("userId") Integer userId,
+                                                           @RequestParam(name = "_page",required = false, defaultValue = "0") int page,
+                                                           @RequestParam(name = "_limit", required = false, defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<UserDTO> listFriendRequest = friendshipService.friendRequestList(userId, pageable);
         if (listFriendRequest.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(listFriendRequest, HttpStatus.OK);
+    }
+
+    @GetMapping("/check/{userId1}/{userId2}")
+    public ResponseEntity<?> checkFriendship(@PathVariable("userId1") Integer userId1, @PathVariable("userId2") Integer userId2) {
+        Boolean friendship = friendshipService.checkFriendship(userId1, userId2);
+        if (friendship == null) {
+            return new ResponseEntity<>("Friendship not found or not accepted", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(friendship, HttpStatus.OK);
+    }
+
+    @GetMapping("pending/{userId1}/{userId2}")
+    public ResponseEntity<?> pendingFriendship(@PathVariable("userId1") Integer userId1, @PathVariable("userId2") Integer userId2) {
+        Boolean isPending = friendshipService.checkPendingRequest(userId1, userId2);
+        if (isPending == null) {
+            return new ResponseEntity<>("Pending request not found", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(isPending, HttpStatus.OK);
     }
 
 }

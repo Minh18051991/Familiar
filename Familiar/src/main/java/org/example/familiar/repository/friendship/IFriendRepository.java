@@ -96,5 +96,11 @@ public interface IFriendRepository extends JpaRepository<Friendship, Integer> {
             "FROM users u\n" +
             "JOIN friendships f on f.user_id1 = u.id\n" +
             "where f.user_id2 = :userId AND f.is_accepted = FALSE AND f.is_deleted = FALSE;", nativeQuery = true)
-    List<UserDTO> friendRequestList (@Param("userId") Integer userId);
+    Page<UserDTO> friendRequestList (@Param("userId") Integer userId, Pageable pageable);
+
+    @Query(value = "SELECT * FROM Friendships f WHERE ((f.user_id1 = :userId1 AND f.user_id2 = :userId2) OR (f.user_id1 = :userId2 AND f.user_id2 = :userId1)) AND f.is_deleted = false AND f.is_accepted = true", nativeQuery = true)
+    Friendship findByIdcheckFriendShip(@Param("userId1") Integer userId1, @Param("userId2") Integer userId2);
+
+    @Query(value = "SELECT * FROM Friendships f WHERE ((f.user_id1 = :userId1 AND f.user_id2 = :userId2) OR (f.user_id1 = :userId2 AND f.user_id2 = :userId1)) AND f.is_deleted = false AND f.is_accepted = false", nativeQuery = true)
+    Friendship findByIdPendingFriendship(@Param("userId1") Integer userId1, @Param("userId2") Integer userId2);
 }

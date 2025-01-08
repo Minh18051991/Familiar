@@ -116,8 +116,20 @@ public class FriendShipService implements IFriendsShipService {
     }
 
     @Override
-    public List<UserDTO> friendRequestList(Integer userId) {
-        return friendRepository.friendRequestList(userId);
+    public Page<UserDTO> friendRequestList(Integer userId, Pageable pageable) {
+        return friendRepository.friendRequestList(userId, pageable);
+    }
+
+    @Override
+    public Boolean checkFriendship(Integer userId1, Integer userId2) {
+        Friendship friendship = friendRepository.findByIdcheckFriendShip(userId1, userId2);
+        return friendship != null;
+    }
+
+    @Override
+    public Boolean checkPendingRequest(Integer userId1, Integer userId2) {
+        Friendship friendship = friendRepository.findByIdPendingFriendship(userId1, userId2);
+        return friendship != null;
     }
 
 }
