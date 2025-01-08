@@ -39,4 +39,10 @@ public class UserController {
         userService.createUser(user);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
+
+    @PostMapping("checkEmail")
+    public ResponseEntity<?> checkEmail(@RequestBody User user) {
+        boolean isExist = !userService.checkEmailExistence(user.getEmail() );
+        return new ResponseEntity<>(isExist, HttpStatus.OK);
+    }
 }

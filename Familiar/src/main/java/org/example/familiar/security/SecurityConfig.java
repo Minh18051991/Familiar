@@ -26,7 +26,8 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Cho phép OPTIONS
                     .requestMatchers("/api/auth/login", "/api/register/account/create",
-                            "/api/user/create", "/api/register/account/check-username"
+                            "/api/user/create", "/api/register/account/check-username","api/user/checkEmail",
+                            "/api/otp/enter-otp","/api/otp/confirm-otp"
                             ).permitAll()
                     .anyRequest().authenticated()
             )

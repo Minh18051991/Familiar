@@ -9,4 +9,5 @@ public interface IUserService {
     void createUser(User user);
     User getUserById(int id);
     User getUserByEmail(String email);
+    boolean checkEmailExistence(String email);
 }
