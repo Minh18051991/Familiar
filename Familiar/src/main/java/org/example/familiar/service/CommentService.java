@@ -3,13 +3,15 @@ package org.example.familiar.service;
 import org.example.familiar.dto.CommentDTO;
 import org.example.familiar.model.Comment;
 import org.example.familiar.model.Post;
+import org.example.familiar.model.User;
 import org.example.familiar.repository.CommentRepository;
 import org.example.familiar.repository.PostRepository;
+import org.example.familiar.repository.user.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CommentService implements ICommentService {
@@ -18,25 +20,42 @@ public class CommentService implements ICommentService {
     private CommentRepository commentRepository;
     @Autowired
     private PostRepository postRepository;
-
+    @Autowired
+    private IUserRepository userRepository;
 
     @Override
     public CommentDTO addComment(CommentDTO commentDTO) {
         Comment comment = convertToEntity(commentDTO);
+        if (comment.getParentComment() != null) {
+            comment.setLevel(comment.getParentComment().getLevel() + 1);
+        } else {
+            comment.setLevel(0);
+        }
         Comment savedComment = commentRepository.save(comment);
         return convertToDTO(savedComment);
     }
 
     @Override
     public List<CommentDTO> getCommentsByPostId(Integer postId) {
-        List<Comment> comments = commentRepository.findByPostIdAndParentCommentIsNullOrderByCreatedAtDesc(postId);
-        return comments.stream().map(this::convertToDTO).collect(Collectors.toList());
+        List<Comment> rootComments = commentRepository.findByPostIdAndParentCommentIsNullOrderByCreatedAtDesc(postId);
+        List<CommentDTO> result = new ArrayList<>();
+        for (Comment rootComment : rootComments) {
+            CommentDTO rootDTO = convertToDTO(rootComment);
+            rootDTO.setReplies(getRepliesRecursively(rootComment.getId()));
+            result.add(rootDTO);
+        }
+        return result;
     }
 
-    @Override
-    public List<CommentDTO> getRepliesForComment(Integer parentCommentId) {
+    private List<CommentDTO> getRepliesRecursively(Integer parentCommentId) {
         List<Comment> replies = commentRepository.findByParentCommentIdOrderByCreatedAtAsc(parentCommentId);
-        return replies.stream().map(this::convertToDTO).collect(Collectors.toList());
+        List<CommentDTO> replyDTOs = new ArrayList<>();
+        for (Comment reply : replies) {
+            CommentDTO replyDTO = convertToDTO(reply);
+            replyDTO.setReplies(getRepliesRecursively(reply.getId()));
+            replyDTOs.add(replyDTO);
+        }
+        return replyDTOs;
     }
 
     @Override
@@ -54,16 +73,21 @@ public class CommentService implements ICommentService {
     }
 
     private CommentDTO convertToDTO(Comment comment) {
+        User user = comment.getUser();
         CommentDTO dto = new CommentDTO();
         dto.setId(comment.getId());
         dto.setPostId(comment.getPost().getId());
-        dto.setUserId(comment.getUser().getId());
+        dto.setUserId(user.getId());
+        dto.setUserFirstName(user.getFirstName());
+        dto.setUserLastName(user.getLastName());
+        dto.setUserProfilePictureUrl(user.getProfilePictureUrl());
         dto.setParentCommentId(comment.getParentComment() != null ? comment.getParentComment().getId() : null);
         dto.setContent(comment.getContent());
         dto.setLevel(comment.getLevel());
         dto.setIsDeleted(comment.getIsDeleted());
         dto.setCreatedAt(comment.getCreatedAt());
         dto.setUpdatedAt(comment.getUpdatedAt());
+        dto.setReplies(new ArrayList<>());  // Initialize empty list for replies
         return dto;
     }
 
@@ -80,7 +104,11 @@ public class CommentService implements ICommentService {
                     .orElseThrow(() -> new RuntimeException("Parent comment not found"));
             comment.setParentComment(parentComment);
         }
-        // Bạn cần set Post và User ở đây, có thể cần inject các repository tương ứng
+        if(dto.getUserId() != null) {
+            User user = userRepository.findById(dto.getUserId())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            comment.setUser(user);
+        }
         comment.setContent(dto.getContent());
         comment.setLevel(dto.getLevel());
         comment.setIsDeleted(dto.getIsDeleted());

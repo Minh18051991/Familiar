@@ -7,6 +7,8 @@ import org.example.familiar.repository.friendship.IFriendRepository;
 import org.example.familiar.repository.user.IUserRepository;
 import org.example.familiar.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -70,15 +72,19 @@ public class FriendShipService implements IFriendsShipService {
     @Override
     public Friendship acceptFriendship(Integer userId1, Integer userId2) {
         Friendship friendship = friendRepository.findFriendshipByUserIds(userId1, userId2);
+
         if (friendship == null) {
             throw new RuntimeException("Không tìm thấy tình bạn");
         }
-        if (friendship.getIsDeleted()) {
-            throw new RuntimeException("Tình bạn này đã xoa");
-        }
+
         if (friendship.getIsAccepted()) {
             throw new RuntimeException("Tình bạn này đã được chấp nhận");
         }
+
+        if (friendship.getIsDeleted()) {
+            friendship.setIsDeleted(false);
+        }
+
         friendship.setIsAccepted(true);
         return friendRepository.save(friendship);
     }
@@ -102,6 +108,16 @@ public class FriendShipService implements IFriendsShipService {
     @Override
     public List<UserDTO> suggestedFriendsList(Integer userId1, Integer userId2) {
         return friendRepository.suggestedFriendsList(userId1, userId2);
+    }
+
+    @Override
+    public Page<UserDTO> suggestedFriendsListPage(Integer userId1, Integer userId2, Pageable pageable) {
+        return friendRepository.suggestedFriendsListPage(userId1, userId2, pageable);
+    }
+
+    @Override
+    public List<UserDTO> friendRequestList(Integer userId) {
+        return friendRepository.friendRequestList(userId);
     }
 
 }
