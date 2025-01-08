@@ -111,7 +111,7 @@ public PostDTO createPost(PostDTO postDTO) {
     }
 
     public Page<PostDTO> getPostsByUserId(Integer userId, Pageable pageable) {
-        Page<Post> posts = postRepository.findByUserIdAndIsDeletedFalse(userId, pageable);
+        Page<Post> posts = postRepository.findByUser_IdAndIsDeletedFalse(userId, pageable);
         return posts.map(this::convertToDTO);
     }
 
