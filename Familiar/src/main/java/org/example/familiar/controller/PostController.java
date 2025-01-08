@@ -20,6 +20,9 @@ public class PostController {
     @GetMapping
     public ResponseEntity<Page<PostDTO>> getAllPosts(Pageable pageable) {
         Page<PostDTO> posts = postService.getAllPosts(pageable);
+        if (posts.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
         return ResponseEntity.ok(posts);
     }
 
@@ -29,6 +32,9 @@ public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDTO) {
         PostDTO createdPost = postService.createPost(postDTO);
         return ResponseEntity.ok(createdPost);
     } catch (Exception e) {
+        if (e.getMessage().equals("User not found")) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }
@@ -36,6 +42,9 @@ public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDTO) {
     @GetMapping("/{id}")
     public ResponseEntity<PostDTO> getPostById(@PathVariable Integer id) {
         PostDTO post = postService.getPostById(id);
+        if (post == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         return ResponseEntity.ok(post);
     }
 
@@ -44,6 +53,9 @@ public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDTO) {
                                               @RequestBody PostDTO postDTO,
                                               @RequestHeader("User-Id") Integer userId) {
         PostDTO updatedPost = postService.updatePost(id, postDTO, userId);
+        if (updatedPost == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
         return ResponseEntity.ok(updatedPost);
     }
 
@@ -51,6 +63,10 @@ public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDTO) {
     public ResponseEntity<Void> deletePost(@PathVariable Integer id,
                                            @RequestHeader("User-Id") Integer userId) {
         postService.deletePost(id, userId);
+        if (postService.getPostById(id) != null
+                && postService.getPostById(id).getUserId().equals(userId)) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
         return ResponseEntity.noContent().build();
     }
 

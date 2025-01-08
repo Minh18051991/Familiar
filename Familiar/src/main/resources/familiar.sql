@@ -255,21 +255,21 @@ VALUES (1, 4, TRUE), -- Nguyen Van An và Pham Thi Dung đã là bạn
 -- Thêm dữ liệu mẫu vào bảng posts
 INSERT INTO posts (user_id, content)
 VALUES
-    (1, 'This is the first post by Nguyen Van An.'),
-    (2, 'Tran Thi Bich shares her thoughts on project management.'),
-    (3, 'Le Van Canh showcases his latest graphic design.'),
-    (4, 'Pham Thi Dung discusses data science trends.'),
-    (5, 'Bui Ngoc Trung talks about engineering challenges.'),
-    (6, 'Hoang Ngoc Hung shares medical advice.'),
-    (7, 'Hoang Ngoc Huyen discusses law enforcement.'),
-    (8, 'Pham Van Tien shares teaching experiences.'),
-    (9, 'Le Quang Hung talks about healthcare.'),
-    (10, 'Nguyen Trung Dung discusses construction engineering.'),
-    (11, 'Nguyen Hoang Duong shares programming tips.'),
-    (12, 'Bui Thi Hanh talks about banking.'),
-    (13, 'Hoang Ngoc Huyen shares financial advice.'),
-    (14, 'Truong Minh Hung discusses education.'),
-    (15, 'Nguyen Quang Thinh shares software development insights.');
+    (1, 'Đây là bài đăng đầu tiên của Nguyễn Văn An.'),
+    (2, 'Trần Thị Bích chia sẻ suy nghĩ của cô ấy về quản lý dự án.'),
+    (3, 'Lê Văn Cảnh giới thiệu thiết kế đồ họa mới nhất của anh ấy.'),
+    (4, 'Phạm Thị Dung thảo luận về xu hướng khoa học dữ liệu.'),
+    (5, 'Bùi Ngọc Trung nói về những thách thức trong kỹ thuật.'),
+    (6, 'Hoàng Ngọc Hùng chia sẻ lời khuyên y tế.'),
+    (7, 'Hoàng Ngọc Huyền thảo luận về thực thi pháp luật.'),
+    (8, 'Phạm Văn Tiến chia sẻ kinh nghiệm giảng dạy.'),
+    (9, 'Lê Quang Hùng nói về chăm sóc sức khỏe.'),
+    (10, 'Nguyễn Trung Dũng thảo luận về kỹ thuật xây dựng.'),
+    (11, 'Nguyễn Hoàng Dương chia sẻ mẹo lập trình.'),
+    (12, 'Bùi Thị Hạnh nói về ngân hàng.'),
+    (13, 'Hoàng Ngọc Huyền chia sẻ lời khuyên tài chính.'),
+    (14, 'Trương Minh Hùng thảo luận về giáo dục.'),
+    (15, 'Nguyễn Quang Thịnh chia sẻ hiểu biết về phát triển phần mềm.');
 
 -- Thêm dữ liệu mẫu vào bảng comments
 INSERT INTO comments (post_id, user_id, parent_comment_id, content, level)

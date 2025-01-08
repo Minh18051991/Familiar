@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Integer> {
-    Page<Post> findByUserIdAndIsDeletedFalse(Integer userId, Pageable pageable);
+    Page<Post> findByUser_IdAndIsDeletedFalse(Integer userId, Pageable pageable);
 }
