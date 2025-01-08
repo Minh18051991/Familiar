@@ -4,6 +4,9 @@ import org.example.familiar.dto.userDTO.UserDTO;
 import org.example.familiar.model.Friendship;
 import org.example.familiar.service.friendship.IFriendsShipService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -78,7 +81,6 @@ public class RestFriendShipController {
         }
     }
 
-
     @GetMapping("/suggestions/{userId1}/{userId2}")
     public ResponseEntity<List<UserDTO>> suggestedFriendsList(@PathVariable("userId1") Integer userId1,
                                                               @PathVariable("userId2") Integer userId2) {
@@ -89,6 +91,27 @@ public class RestFriendShipController {
         return new ResponseEntity<>(listSuggestedFriends, HttpStatus.OK);
     }
 
+    @GetMapping("/suggestions-page/{userId1}/{userId2}")
+    public ResponseEntity<Page<UserDTO>> suggestedFriendsListPage(@PathVariable("userId1") Integer userId1,
+                                                                  @PathVariable("userId2") Integer userId2,
+                                                                  @RequestParam(name = "_page",required = false, defaultValue = "0") int page,
+                                                                  @RequestParam(name = "_limit", required = false, defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<UserDTO> friendList = friendshipService.suggestedFriendsListPage(userId1, userId2, pageable);
+        if (friendList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(friendList, HttpStatus.OK);
+    }
+
+    @GetMapping("/request/{userId}")
+    public ResponseEntity<List<UserDTO>> friendRequestList(@PathVariable("userId") Integer userId) {
+        List<UserDTO> listFriendRequest = friendshipService.friendRequestList(userId);
+        if (listFriendRequest.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(listFriendRequest, HttpStatus.OK);
+    }
 
 }
 
