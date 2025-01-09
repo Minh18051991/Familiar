@@ -105,12 +105,25 @@ public class RestFriendShipController {
     }
 
     @GetMapping("/request/{userId}")
-    public ResponseEntity<List<UserDTO>> friendRequestList(@PathVariable("userId") Integer userId) {
-        List<UserDTO> listFriendRequest = friendshipService.friendRequestList(userId);
+    public ResponseEntity<Page<UserDTO>> friendRequestList(@PathVariable("userId") Integer userId,
+                                                           @RequestParam(name = "_page",required = false, defaultValue = "0") int page,
+                                                           @RequestParam(name = "_limit", required = false, defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<UserDTO> listFriendRequest = friendshipService.friendRequestList(userId, pageable);
         if (listFriendRequest.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return new ResponseEntity<>(listFriendRequest, HttpStatus.OK);
+    }
+
+    @GetMapping("/status/{userId1}/{userId2}")
+    public ResponseEntity<?> getFriendShipStatus(@PathVariable("userId1") Integer userId1,
+                                                 @PathVariable("userId2") Integer userId2){
+        String status = friendshipService.getFriendShipStatus(userId1, userId2);
+        if (status == null) {
+            return new ResponseEntity<>("Status not found", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(status, HttpStatus.OK);
     }
 
 }

@@ -24,5 +24,7 @@ public interface IFriendsShipService {
 
     Page<UserDTO> suggestedFriendsListPage(Integer userId1, Integer userId2, Pageable pageable);
 
-    List<UserDTO> friendRequestList(Integer userId);
+    Page<UserDTO> friendRequestList(Integer userId, Pageable pageable);
+
+    String getFriendShipStatus(Integer userId1, Integer userId2);
 }
