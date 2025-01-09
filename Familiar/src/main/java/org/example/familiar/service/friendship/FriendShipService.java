@@ -116,8 +116,29 @@ public class FriendShipService implements IFriendsShipService {
     }
 
     @Override
-    public List<UserDTO> friendRequestList(Integer userId) {
-        return friendRepository.friendRequestList(userId);
+    public Page<UserDTO> friendRequestList(Integer userId, Pageable pageable) {
+        return friendRepository.friendRequestList(userId, pageable);
+    }
+
+    @Override
+    public String getFriendShipStatus(Integer userId1, Integer userId2) {
+       Friendship friendship = friendRepository.findByUserIdsFriendShip(userId1, userId2);
+
+        // Nếu tìm thấy một mối quan hệ
+        if (friendship != null) {
+            if (friendship.getIsAccepted()) {
+                return "friend"; // Nếu mối quan hệ đã được chấp nhận, trả về "friend"
+            } else {
+                // Kiểm tra ai là người yêu cầu kết bạn
+                if (friendship.getUser1().getId().equals(userId1)) {
+                    return "pending"; // Nếu userId1 là người yêu cầu, trả về "pending"
+                } else {
+                    return "waiting"; // Nếu userId2 là người yêu cầu, trả về "waiting"
+                }
+            }
+        }
+
+        return "notFriend"; // Nếu không tìm thấy mối quan hệ nào, trả về "notFriend"
     }
 
 }
