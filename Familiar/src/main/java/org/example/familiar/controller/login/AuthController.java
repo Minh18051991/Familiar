@@ -36,21 +36,21 @@ public class AuthController {
     private IUserService userService;
 
 
+
     @PostMapping("/login")
-    public ResponseEntity<?>authenticate(@RequestBody Login login) throws Exception {
-
-        if (accountService.getAccountByUsernameAndPassword(login)!=null) {
-
-            Account account = accountService.getAccountByUsernameAndPassword(login);
+    public ResponseEntity<?> authenticate(@RequestBody Login login) throws Exception {
+        Account account = accountService.getAccountByUsernameAndPassword(login);
+        if (account != null) {
             User user = userService.getUserById(account.getUser().getId());
-            String token = jwtUtil.generateToken(login.getUsername());
-            List<String> role = accountRepository.findRoleNamesByAccountId(account.getId());
-            AuthRespone authRespone = new AuthRespone(token,account.getUsername(), role,user.getProfilePictureUrl(),account.getUser().getId(),user.getGender());
+            List<String> roles = accountRepository.findRoleNamesByAccountId(account.getId());
+            String token = jwtUtil.generateToken(account.getUsername(), roles);
+
+            AuthRespone authRespone = new AuthRespone(token, account.getUsername(), roles,
+                    user.getProfilePictureUrl(), account.getUser().getId(), user.getGender());
             return new ResponseEntity<>(authRespone, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("token", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Invalid credentials", HttpStatus.UNAUTHORIZED);
         }
-
     }
 
 
