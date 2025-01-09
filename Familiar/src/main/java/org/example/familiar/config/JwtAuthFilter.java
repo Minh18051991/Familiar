@@ -9,71 +9,49 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
+
+@Component
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private String secretKey = "myVeryLongAndSecureKey12345678901111111111111111111111111";  // Khóa bí mật dùng để giải mã JWT
+    @Autowired
+    private JwtUtils jwtUtils;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        // Lấy token từ header
-        String token = request.getHeader("Authorization");
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
+        final String authorizationHeader = request.getHeader("Authorization");
 
-        // Nếu token không có, cho phép yêu cầu tiếp tục mà không xác thực
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7); // Loại bỏ tiền tố "Bearer "
+        String username = null;
+        String jwt = null;
 
-            try {
-                // Giải mã token và lấy thông tin claims (nội dung payload)
-                Claims claims = Jwts.parser()
-                        .setSigningKey(secretKey)
-                        .parseClaimsJws(token)
-                        .getBody();
+        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+            jwt = authorizationHeader.substring(7);
+            username = jwtUtils.extractUsername(jwt);
+        }
 
-                // Lấy thông tin người dùng từ claims (ví dụ: username)
-                String username = claims.getSubject();
+        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+            if (jwtUtils.validateToken(jwt)) {
+                List<String> roles = jwtUtils.extractRoles(jwt);
+                List<SimpleGrantedAuthority> authorities = roles.stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .collect(Collectors.toList());
 
-                // Tạo đối tượng Authentication (UsernamePasswordAuthenticationToken) cho Spring Security
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null, null);
-
-                // Đặt Authentication vào SecurityContext
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            } catch (Exception e) {
-                // Nếu token không hợp lệ, sẽ ném lỗi và yêu cầu sẽ không được tiếp tục
-                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token không hợp lệ");
-                return;
+                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+                        new UsernamePasswordAuthenticationToken(username, null, authorities);
+                usernamePasswordAuthenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
             }
         }
-        // Tiếp tục chuỗi bộ lọc
         filterChain.doFilter(request, response);
     }
-
-
-//    @Autowired
-//    private JwtUtils jwtUtils;
-//    @Override
-//    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-//        String token = request.getHeader("Authorization");
-//
-//        if (token != null && token.startsWith("Bearer ")) {
-//            token = token.substring(7);
-//
-//            try {
-//                String username = jwtUtils.extractUsername(token);
-//                List<GrantedAuthority> authorities = jwtUtils.extractAuthorities(token);
-//
-//                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
-//                SecurityContextHolder.getContext().setAuthentication(authentication);
-//            } catch (Exception e) {
-//                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token");
-//                return;
-//            }
-//        }
-//        filterChain.doFilter(request, response);
-//    }
 }

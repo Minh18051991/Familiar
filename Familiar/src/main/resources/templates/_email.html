@@ -86,17 +86,14 @@
 <body>
 <div class="container">
     <div class="header">
-        <h2>OTP Verification</h2>
-        <p>Confirm your email to proceed</p>
+        <h2>Mã OTP</h2>
+        <p>Nhập Otp để tiếp tục thay đổi mật khẩu ở trang Familiar </p>
     </div>
     <div class="content">
-        <p><strong>Name:</strong> <span th:text="${name}">John Doe</span></p>
+        <p><strong>Tên:</strong> <span th:text="${name}">John Doe</span></p>
         <p><strong>Email:</strong> <span th:text="${email}">john.doe@example.com</span></p>
         <div class="otp-box" th:text="${otp}">123456</div>
-        <p>This OTP is valid for 5 minutes.</p>
-    </div>
-    <div class="footer">
-        <p>If you didn't request this, please ignore this email.</p>
+        <p>Mã Otp sẽ hết hạn sau 5 phút.</p>
     </div>
 </div>
 </body>
