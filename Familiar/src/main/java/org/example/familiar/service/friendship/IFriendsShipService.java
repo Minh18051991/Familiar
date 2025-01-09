@@ -26,7 +26,5 @@ public interface IFriendsShipService {
 
     Page<UserDTO> friendRequestList(Integer userId, Pageable pageable);
 
-    Boolean checkFriendship(Integer userId1, Integer userId2);
-
-    Boolean checkPendingRequest(Integer userId1, Integer userId2);
+    String getFriendShipStatus(Integer userId1, Integer userId2);
 }
