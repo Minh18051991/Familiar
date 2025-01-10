@@ -18,22 +18,25 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebSecurity
 public class SecurityConfig {
 
-@Bean
-public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-    http
-            .csrf(csrf -> csrf.disable())
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Cho phép OPTIONS
-                    .requestMatchers("/api/auth/login", "/api/register/account/create",
-                            "/api/user/create", "/api/register/account/check-username","api/user/checkEmail"
-                            ).permitAll()
-                    .anyRequest().authenticated()
-            )
-            .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Cho phép OPTIONS
+                        .requestMatchers("/api/auth/login", "/api/register/account/create",
+                                "/api/user/create", "/api/register/account/check-username", "api/user/checkEmail"
+                        ).permitAll()
+//                        .requestMatchers("/api/user/list","/api/user/detail/{id}").hasAnyRole("ADMIN", "USER")
+//                        .requestMatchers("/api/user/update/{id}").hasRole("ADMIN")
+//                        .requestMatchers("/api/friendships/list/{id}").hasAnyRole("USER")
+                        .anyRequest().authenticated()
+                )
+                .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);
 
-    return http.build();
-}
+        return http.build();
+    }
 
 
     @Bean
@@ -42,10 +45,10 @@ public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Excepti
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE","OPTIONS")
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedOrigins("http://localhost:3000")
                         .allowedHeaders("*")
-                        .exposedHeaders("Authorization","Content-Type") ;
+                        .exposedHeaders("Authorization", "Content-Type");
             }
         };
     }

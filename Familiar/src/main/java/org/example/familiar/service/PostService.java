@@ -36,7 +36,7 @@ public class PostService {
     private CommentRepository commentRepository;
 
     public Page<PostDTO> getAllPosts(Pageable pageable) {
-        Page<Post> posts = postRepository.findAll(pageable);
+        Page<Post> posts = postRepository.findByIsDeletedFalse(pageable);
         return posts.map(this::convertToDTO);
     }
 
@@ -99,11 +99,6 @@ public PostDTO createPost(PostDTO postDTO) {
             throw new RuntimeException("You are not authorized to delete this post");
         }
 
-        // Delete attachments from Firebase
-        List<Attachment> attachments = attachmentRepository.findByPostId(id);
-        for (Attachment attachment : attachments) {
-            firebaseStorageService.deleteFile(attachment.getFileUrl());
-        }
 
         // Soft delete the post
         post.setIsDeleted(true);

@@ -63,4 +63,5 @@ public class Message {
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
 }
