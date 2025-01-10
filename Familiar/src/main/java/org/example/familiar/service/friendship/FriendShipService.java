@@ -122,8 +122,8 @@ public class FriendShipService implements IFriendsShipService {
 
     @Override
     public String getFriendShipStatus(Integer userId1, Integer userId2) {
-        Friendship friendship = friendRepository.findByUserIdsFriendShip(userId1, userId2);
-        
+        Friendship friendship = friendRepository.findFriendshipByUserIds(userId1, userId2);
+
         if (friendship == null) {
             return "notFriend";
         }
