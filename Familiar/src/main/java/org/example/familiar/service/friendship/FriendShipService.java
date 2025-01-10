@@ -106,11 +106,6 @@ public class FriendShipService implements IFriendsShipService {
     }
 
     @Override
-    public List<UserDTO> suggestedFriendsList(Integer userId1, Integer userId2) {
-        return friendRepository.suggestedFriendsList(userId1, userId2);
-    }
-
-    @Override
     public Page<UserDTO> suggestedFriendsListPage(Integer userId1, Integer userId2, Pageable pageable) {
         return friendRepository.suggestedFriendsListPage(userId1, userId2, pageable);
     }
