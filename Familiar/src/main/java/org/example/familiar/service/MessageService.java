@@ -4,12 +4,13 @@ import org.example.familiar.dto.MessageDTO;
 import org.example.familiar.model.Message;
 import org.example.familiar.model.MessageAttachment;
 import org.example.familiar.model.User;
-import org.example.familiar.repository.MessageRepository;
 import org.example.familiar.repository.MessageAttachmentRepository;
+import org.example.familiar.repository.MessageRepository;
 import org.example.familiar.repository.user.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
-public class MessageService {
+public class MessageService implements IMessageService {
 
     @Autowired
     private MessageRepository messageRepository;
@@ -30,39 +31,20 @@ public class MessageService {
     @Autowired
     private MessageAttachmentRepository messageAttachmentRepository;
 
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
     @Transactional
     public MessageDTO createMessage(MessageDTO messageDTO) {
-        User sender = userRepository.findById(messageDTO.getSenderUserId())
-                .orElseThrow(() -> new RuntimeException("Sender not found"));
-        User receiver = userRepository.findById(messageDTO.getReceiverUserId())
-                .orElseThrow(() -> new RuntimeException("Receiver not found"));
+        Message message = createMessageEntity(messageDTO);
+        Message savedMessage = messageRepository.save(message);
 
-        Message message = new Message();
-        message.setSender(sender);
-        message.setReceiver(receiver);
-        message.setContent(messageDTO.getContent());
-        message.setMessageType(messageDTO.getMessageType());
-        message.setIsRead(false);
-        message.setIsDeleted(false);
-        message.setIsSent(true);
-        message.setSessionId(messageDTO.getSessionId());
-        message.setCreatedAt(LocalDateTime.now());
-        message.setUpdatedAt(LocalDateTime.now());
-
-        message = messageRepository.save(message);
-
-        List<MessageAttachment> attachments = new ArrayList<>();
-        if (messageDTO.getAttachmentUrls() != null && !messageDTO.getAttachmentUrls().isEmpty()) {
-            for (String url : messageDTO.getAttachmentUrls()) {
-                MessageAttachment attachment = new MessageAttachment();
-                attachment.setMessage(message);
-                attachment.setFileUrl(url);
-                attachments.add(attachment);
-            }
+        List<MessageAttachment> attachments = createAttachments(messageDTO, savedMessage);
+        if (!attachments.isEmpty()) {
             messageAttachmentRepository.saveAll(attachments);
         }
 
-        return convertToDTO(message);
+        return convertToDTO(savedMessage);
     }
 
     public MessageDTO getMessageById(Integer id) {
@@ -79,21 +61,78 @@ public class MessageService {
         message.setContent(messageDTO.getContent());
         message.setUpdatedAt(LocalDateTime.now());
 
-        message = messageRepository.save(message);
-        return convertToDTO(message);
+        Message updatedMessage = messageRepository.save(message);
+        return convertToDTO(updatedMessage);
     }
 
     @Transactional
     public void deleteMessage(Integer id) {
         Message message = messageRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Message not found"));
-
         message.setIsDeleted(true);
         messageRepository.save(message);
     }
+
     public Page<MessageDTO> getMessagesBetweenUsers(Integer user1Id, Integer user2Id, Pageable pageable) {
         Page<Message> messages = messageRepository.findMessagesBetweenUsers(user1Id, user2Id, pageable);
         return messages.map(this::convertToDTO);
+    }
+
+    @Transactional
+    public MessageDTO sendMessageInRealTime(MessageDTO messageDTO) {
+        try {
+            Message message = createMessageEntity(messageDTO);
+            Message savedMessage = messageRepository.save(message);
+            
+            List<MessageAttachment> attachments = createAttachments(messageDTO, savedMessage);
+            if (!attachments.isEmpty()) {
+                messageAttachmentRepository.saveAll(attachments);
+            }
+
+            MessageDTO savedMessageDTO = convertToDTO(savedMessage);
+            
+            // Gửi tin nhắn qua WebSocket
+            messagingTemplate.convertAndSendToUser(
+                savedMessageDTO.getReceiverUserId().toString(),
+                "/queue/messages",
+                savedMessageDTO
+            );
+
+            return savedMessageDTO;
+        } catch (Exception e) {
+            // Log lỗi và ném ra ngoại lệ tùy chỉnh
+            throw new RuntimeException("Failed to send message", e);
+        }
+    }
+
+    private Message createMessageEntity(MessageDTO messageDTO) {
+        User sender = userRepository.findById(messageDTO.getSenderUserId())
+                .orElseThrow(() -> new RuntimeException("Sender not found"));
+        User receiver = userRepository.findById(messageDTO.getReceiverUserId())
+                .orElseThrow(() -> new RuntimeException("Receiver not found"));
+
+        Message message = new Message();
+        message.setSender(sender);
+        message.setReceiver(receiver);
+        message.setContent(messageDTO.getContent());
+        message.setIsDeleted(false);
+        message.setCreatedAt(LocalDateTime.now());
+        message.setUpdatedAt(LocalDateTime.now());
+
+        return message;
+    }
+
+    private List<MessageAttachment> createAttachments(MessageDTO messageDTO, Message message) {
+        List<MessageAttachment> attachments = new ArrayList<>();
+        if (messageDTO.getAttachmentUrls() != null && !messageDTO.getAttachmentUrls().isEmpty()) {
+            for (String url : messageDTO.getAttachmentUrls()) {
+                MessageAttachment attachment = new MessageAttachment();
+                attachment.setMessage(message);
+                attachment.setFileUrl(url);
+                attachments.add(attachment);
+            }
+        }
+        return attachments;
     }
 
     private MessageDTO convertToDTO(Message message) {
@@ -102,19 +141,16 @@ public class MessageService {
                 .map(MessageAttachment::getFileUrl)
                 .collect(Collectors.toList());
 
-        return new MessageDTO(
-                message.getId(),
-                message.getSender().getId(),
-                message.getReceiver().getId(),
-                message.getContent(),
-                message.getMessageType(),
-                message.getIsRead(),
-                message.getIsDeleted(),
-                message.getIsSent(),
-                message.getSessionId(),
-                message.getCreatedAt(),
-                message.getUpdatedAt(),
-                attachmentUrls
-        );
+        MessageDTO dto = new MessageDTO();
+        dto.setId(message.getId());
+        dto.setSenderUserId(message.getSender().getId());
+        dto.setReceiverUserId(message.getReceiver().getId());
+        dto.setContent(message.getContent());
+        dto.setIsDeleted(message.getIsDeleted());
+        dto.setCreatedAt(message.getCreatedAt());
+        dto.setUpdatedAt(message.getUpdatedAt());
+        dto.setAttachmentUrls(attachmentUrls);
+
+        return dto;
     }
 }
