@@ -106,11 +106,6 @@ public class FriendShipService implements IFriendsShipService {
     }
 
     @Override
-    public List<UserDTO> suggestedFriendsList(Integer userId1, Integer userId2) {
-        return friendRepository.suggestedFriendsList(userId1, userId2);
-    }
-
-    @Override
     public Page<UserDTO> suggestedFriendsListPage(Integer userId1, Integer userId2, Pageable pageable) {
         return friendRepository.suggestedFriendsListPage(userId1, userId2, pageable);
     }
@@ -122,23 +117,38 @@ public class FriendShipService implements IFriendsShipService {
 
     @Override
     public String getFriendShipStatus(Integer userId1, Integer userId2) {
-       Friendship friendship = friendRepository.findByUserIdsFriendShip(userId1, userId2);
+        Friendship friendship = friendRepository.findFriendshipByUserIds(userId1, userId2);
 
-        // Nếu tìm thấy một mối quan hệ
-        if (friendship != null) {
-            if (friendship.getIsAccepted()) {
-                return "friend"; // Nếu mối quan hệ đã được chấp nhận, trả về "friend"
+        if (friendship == null) {
+            return "notFriend";
+        }
+
+        if (friendship.getIsAccepted() && !friendship.getIsDeleted()) {
+            return "friend";
+        }
+
+        if (friendship.getUser1().getId().equals(userId1)) {
+            if (!friendship.getIsDeleted()) {
+                return "pending";
             } else {
-                // Kiểm tra ai là người yêu cầu kết bạn
-                if (friendship.getUser1().getId().equals(userId1)) {
-                    return "pending"; // Nếu userId1 là người yêu cầu, trả về "pending"
-                } else {
-                    return "waiting"; // Nếu userId2 là người yêu cầu, trả về "waiting"
-                }
+                return "deleted";
             }
         }
 
-        return "notFriend"; // Nếu không tìm thấy mối quan hệ nào, trả về "notFriend"
+        if (friendship.getUser2().getId().equals(userId1)) {
+            if (!friendship.getIsDeleted()) {
+                return "waiting";
+            } else {
+                return "deleted";
+            }
+        }
+
+        return "notFriend";
+    }
+
+    @Override
+    public Page<UserDTO> mutualFriendList(Integer userId1, Integer userId2, Pageable pageable) {
+        return friendRepository.mutualFriendList(userId1, userId2, pageable);
     }
 
 }

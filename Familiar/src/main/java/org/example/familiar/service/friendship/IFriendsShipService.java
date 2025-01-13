@@ -20,11 +20,11 @@ public interface IFriendsShipService {
 
     Friendship cancelFriendship(Integer userId1, Integer userId2);
 
-    List<UserDTO> suggestedFriendsList(Integer userId1, Integer userId2);
-
     Page<UserDTO> suggestedFriendsListPage(Integer userId1, Integer userId2, Pageable pageable);
 
     Page<UserDTO> friendRequestList(Integer userId, Pageable pageable);
 
     String getFriendShipStatus(Integer userId1, Integer userId2);
+
+    Page<UserDTO> mutualFriendList(Integer userId1, Integer userId2, Pageable pageable);
 }

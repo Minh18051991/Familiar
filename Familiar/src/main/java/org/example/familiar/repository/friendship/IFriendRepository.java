@@ -98,14 +98,20 @@ public interface IFriendRepository extends JpaRepository<Friendship, Integer> {
             "where f.user_id2 = :userId AND f.is_accepted = FALSE AND f.is_deleted = FALSE;", nativeQuery = true)
     Page<UserDTO> friendRequestList (@Param("userId") Integer userId, Pageable pageable);
 
-    @Query(value = "SELECT * FROM friendships WHERE user_id1 = :userId1 AND user_id2 = :userId2 AND is_deleted = false;", nativeQuery = true)
-    Friendship findByUserId1AndUserId2(Integer userId1, Integer userId2);
-
-    @Query(value = "SELECT * FROM friendships WHERE user_id1 = :userId2 AND user_id2 = :userId1 AND is_deleted = false;", nativeQuery = true)
-    Friendship findByUserId2AndUserId1(Integer userId1, Integer userId2);
-
-    @Query(value = "SELECT * FROM Friendships f WHERE (f.user_id1 = :userId1 AND f.user_id2 = :userId2) OR (f.user_id1 = :userId2 AND f.user_id2 = :userId1 AND is_deleted = FALSE)", nativeQuery = true)
-    Friendship findByUserIdsFriendShip(@Param("userId1") Integer userId1, @Param("userId2") Integer userId2);
-
-
+    @Query(value = "SELECT DISTINCT u.id AS userId, u.first_name as userFirstName, u.last_name as userLastName, u.profile_picture_url as userProfilePictureUrl\n" +
+            "FROM \n" +
+            "    friendships f1\n" +
+            "JOIN \n" +
+            "    friendships f2 ON f1.user_id2 = f2.user_id2\n" +
+            "JOIN \n" +
+            "    users u ON u.id = f1.user_id2\n" +
+            "WHERE \n" +
+            "    f1.user_id1 = :userId1\n" +
+            "    AND f2.user_id1 = :userId2\n" +
+            "    AND f1.is_accepted = TRUE\n" +
+            "    AND f2.is_accepted = TRUE\n" +
+            "    AND f1.is_deleted = FALSE\n" +
+            "    AND f2.is_deleted = FALSE\n" +
+            "    AND u.is_deleted = FALSE;", nativeQuery = true)
+    Page<UserDTO> mutualFriendList (@Param("userId1") Integer userA, @Param("userId2") Integer userB, Pageable pageable);
 }
