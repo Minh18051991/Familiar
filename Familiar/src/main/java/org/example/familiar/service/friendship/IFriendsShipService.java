@@ -25,4 +25,6 @@ public interface IFriendsShipService {
     Page<UserDTO> friendRequestList(Integer userId, Pageable pageable);
 
     String getFriendShipStatus(Integer userId1, Integer userId2);
+
+    Page<UserDTO> mutualFriendList(Integer userId1, Integer userId2, Pageable pageable);
 }
