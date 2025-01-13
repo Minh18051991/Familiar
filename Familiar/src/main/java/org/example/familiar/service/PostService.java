@@ -29,8 +29,6 @@ public class PostService {
     @Autowired
     private AttachmentRepository attachmentRepository;
 
-    @Autowired
-    private FirebaseStorageService firebaseStorageService;
 
     @Autowired
     private CommentRepository commentRepository;

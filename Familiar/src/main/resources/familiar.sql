@@ -126,7 +126,6 @@ CREATE TABLE messages
     receiver_user_id INT NOT NULL,
     content       TEXT NOT NULL,
     message_type  VARCHAR(20) DEFAULT 'TEXT',
-    is_read       BOOLEAN    DEFAULT FALSE,
     is_deleted    BOOLEAN    DEFAULT FALSE,
     created_at    TIMESTAMP  DEFAULT CURRENT_TIMESTAMP,
     updated_at    TIMESTAMP  DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -575,7 +574,14 @@ VALUES
     (5, 'Những xu hướng công nghệ mới trong lĩnh vực kỹ thuật.'),
     (5, 'Cách áp dụng IoT trong các dự án kỹ thuật.'),
     (5, 'Thách thức và giải pháp trong việc tối ưu hóa quy trình sản xuất.'),
-    (5, 'Chia sẻ kinh nghiệm làm việc với các dự án kỹ thuật phức tạp.');
+    (5, 'Chia sẻ kinh nghiệm làm việc với các dự án kỹ thuật phức tạp.'),
+    (1, 'Hôm nay là một ngày tuyệt vời!'),
+    (2, 'Vừa hoàn thành một dự án lớn. Cảm thấy rất tự hào!'),
+    (3, 'Chia sẻ một số hình ảnh từ chuyến du lịch gần đây của tôi.'),
+    (4, 'Đang học một kỹ năng mới. Rất thú vị!'),
+    (5, 'Cuối tuần này có ai muốn đi xem phim không?');
+
+
 -- Thêm dữ liệu mẫu vào bảng comments
 INSERT INTO comments (post_id, user_id, parent_comment_id, content, level)
 VALUES
@@ -639,5 +645,30 @@ VALUES
     (14, 13, 12, 'Hoàn toàn đồng ý! 👨‍🏫', 1),
     (15, 14, NULL, 'Phát triển phần mềm thật thú vị, Nguyễn Quang Thịnh. 🖥️', 0),
     (15, 15, 14, 'Cảm ơn về những chia sẻ hữu ích. 👨‍💻', 1);
+INSERT INTO attachments (post_id, file_url, file_name, file_type, file_size)
+VALUES
+    (1, 'https://images2.thanhnien.vn/528068263637045248/2024/1/25/e093e9cfc9027d6a142358d24d2ee350-65a11ac2af785880-17061562929701875684912.jpg', 'sunny_day.jpg', 'image/jpeg', 1024000),
+    (2, 'https://media.zim.vn/637b3f0f62e55bf01005680c/bai-mau-describe-a-time-when-you-felt-proud-of-a-family-member.jpg', 'project_summary.pdf', 'application/pdf', 2048000),
+    (3, 'https://i.insider.com/669864ca80d4d5da13d4cc75?width=700', 'vacation_photo1.jpg', 'image/jpeg', 1536000),
+    (3, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStuH5Gx1E99oXDCgvbpIA3ndin8Guaalklmw&s', 'vacation_photo2.jpg', 'image/jpeg', 1792000),
+    (3, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJBSchnKLVquh1_Xd4PAovbphvQDifzqmYsg&s', 'vacation_photo3.jpg', 'image/jpeg', 2048000),
+    (4, 'https://firebasestorage.googleapis.com/v0/b/familiar-c17d5.firebasestorage.app/o/ROSE%20%26%20Bruno%20Mars%20-%20APT.%20(Official%20Music%20Video).mp4?alt=media&token=a9154d32-d695-4668-a36a-50e3fa7b6baf', 'learning_progress.mp4', 'video/mp4', 10240000),
+    (5, 'https://time.ly/wp-content/uploads/2023/03/attract-tourists-destinations.jpg', 'movie_poster.jpg', 'image/jpeg', 512000);
+
+
+-- Thêm dữ liệu mẫu vào bảng messages
+INSERT INTO messages (sender_user_id, receiver_user_id, content, message_type, is_deleted, created_at, updated_at)
+VALUES
+(1, 2, 'Xin chào! Bạn khỏe không?', 'TEXT', FALSE, '2023-06-01 10:00:00', '2023-06-01 10:00:00'),
+(2, 1, 'Chào bạn! Tôi khỏe, còn bạn?', 'TEXT', FALSE, '2023-06-01 10:05:00', '2023-06-01 10:05:00'),
+(1, 2, 'Tôi cũng khỏe. Cảm ơn bạn!', 'TEXT', FALSE, '2023-06-01 10:10:00', '2023-06-01 10:10:00'),
+(3, 4, 'Bạn có rảnh không? Tôi cần hỏi về dự án.', 'TEXT', FALSE, '2023-06-02 14:30:00', '2023-06-02 14:30:00'),
+(4, 3, 'Tôi đang bận một chút. Có gì gấp không?', 'TEXT', FALSE, '2023-06-02 14:35:00', '2023-06-02 14:35:00'),
+(3, 4, 'Không gấp lắm. Khi nào rảnh bạn nhắn lại nhé.', 'TEXT', FALSE, '2023-06-02 14:40:00', '2023-06-02 14:40:00'),
+(5, 6, 'Chào bạn! Tôi là Ngọc Trung.', 'TEXT', FALSE, '2023-06-03 09:00:00', '2023-06-03 09:00:00'),
+(6, 5, 'Chào Trung! Rất vui được làm quen.', 'TEXT', FALSE, '2023-06-03 09:05:00', '2023-06-03 09:05:00'),
+(7, 8, 'Bạn có tham gia sự kiện tối nay không?', 'TEXT', FALSE, '2023-06-04 18:00:00', '2023-06-04 18:00:00'),
+(8, 7, 'Có, tôi sẽ đến. Gặp bạn ở đó nhé!', 'TEXT', FALSE, '2023-06-04 18:05:00', '2023-06-04 18:05:00');
+
 
 
