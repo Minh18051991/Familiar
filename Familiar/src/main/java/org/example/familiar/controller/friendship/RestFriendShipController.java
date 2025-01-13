@@ -81,16 +81,6 @@ public class RestFriendShipController {
         }
     }
 
-    @GetMapping("/suggestions/{userId1}/{userId2}")
-    public ResponseEntity<List<UserDTO>> suggestedFriendsList(@PathVariable("userId1") Integer userId1,
-                                                              @PathVariable("userId2") Integer userId2) {
-        List<UserDTO> listSuggestedFriends = friendshipService.suggestedFriendsList(userId1, userId2);
-        if (listSuggestedFriends.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        return new ResponseEntity<>(listSuggestedFriends, HttpStatus.OK);
-    }
-
     @GetMapping("/suggestions-page/{userId1}/{userId2}")
     public ResponseEntity<Page<UserDTO>> suggestedFriendsListPage(@PathVariable("userId1") Integer userId1,
                                                                   @PathVariable("userId2") Integer userId2,
