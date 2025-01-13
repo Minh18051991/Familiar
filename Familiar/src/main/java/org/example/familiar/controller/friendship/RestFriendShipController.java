@@ -116,5 +116,19 @@ public class RestFriendShipController {
         return new ResponseEntity<>(status, HttpStatus.OK);
     }
 
+    @GetMapping("/mutual/{userId1}/{userId2}")
+    public ResponseEntity<Page<UserDTO>> mutualFriendList(@PathVariable("userId1") Integer userId1,
+                                                          @PathVariable("userId2") Integer userId2,
+                                                          @RequestParam(name = "_page",required = false, defaultValue = "0") int page,
+                                                          @RequestParam(name = "_limit", required = false, defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<UserDTO> friendList = friendshipService.mutualFriendList(userId1, userId2, pageable);
+        if (friendList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<> (friendList, HttpStatus.OK);
+
+    }
+
 }
 
