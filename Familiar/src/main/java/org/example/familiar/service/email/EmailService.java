@@ -16,16 +16,6 @@ public class EmailService {
     @Autowired
     private TemplateEngine templateEngine;
 
-    //config gmail đơn giản
-//    public void sendOtpEmail(String toEmail, String otp) {
-//        SimpleMailMessage message = new SimpleMailMessage();
-//        message.setTo(toEmail);
-//        message.setSubject("Mã OTP để đổi mật khẩu");
-//        message.setText("Mã OTP của bạn là: " + otp + ". Mã này có hiệu lực trong 5 phút.");
-//
-//        mailSender.send(message);
-//    }
-
 
 // config gmail bằng html
     public void sendResetPasswordEmail(String toEmail, String name, String otp) {
