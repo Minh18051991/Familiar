@@ -42,4 +42,8 @@ public class AccountService implements IAccountService {
         updatedAccount.setPassword(passwordEncoder.encode(account.getPassword()));
         accountRepository.save(updatedAccount);
     }
+
+    public Account getAccountByEmail(String email) {
+        return accountRepository.findByUserEmail(email);
+    }
 }

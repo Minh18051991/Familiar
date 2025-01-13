@@ -11,6 +11,7 @@ import java.util.List;
 public interface AccountRepository extends JpaRepository<Account, Integer> {
     Account findByUsername(String username);
     boolean existsByUsername(String username);
+    Account findByUserEmail(String email);
 
     @Query("SELECT r.roleName FROM Account a JOIN AccountRole ar ON a.id = ar.account.id JOIN Role r ON ar.role.id = r.id WHERE a.id = :accountId")
     List<String> findRoleNamesByAccountId(@Param("accountId") Integer accountId);

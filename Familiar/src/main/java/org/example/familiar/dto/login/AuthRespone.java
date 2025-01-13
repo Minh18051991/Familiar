@@ -48,6 +48,11 @@ public class AuthRespone {
         this.token = token;
     }
 
+    public AuthRespone(String username, String token) {
+        this.token = token;
+        this.username = username;
+    }
+
     public AuthRespone(String token, String username, List<String> role,String profilePictureUrl, Integer userId,String gender) {
         this.token = token;
         this.username = username;

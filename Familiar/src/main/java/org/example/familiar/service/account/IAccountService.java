@@ -8,4 +8,5 @@ public interface IAccountService {
     Account createAccount(Account account);
     boolean checkUsernameExists(String username);
     void updateAccount(Account account);
+    Account getAccountByEmail(String email);
 }

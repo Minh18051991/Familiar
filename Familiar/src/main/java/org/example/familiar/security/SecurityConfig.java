@@ -26,7 +26,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Cho phép OPTIONS
                         .requestMatchers("/api/auth/login", "/api/register/account/create",
-                                "/api/user/create", "/api/register/account/check-username", "api/user/checkEmail"
+                                "/api/user/create", "/api/register/account/check-username", "api/user/checkEmail","api/forget-password/generate-token"
                         ).permitAll()
 //                        .requestMatchers("/api/user/list","/api/user/detail/{id}").hasAnyRole("ADMIN", "USER")
 //                        .requestMatchers("/api/user/update/{id}").hasRole("ADMIN")
