@@ -135,8 +135,8 @@ CREATE TABLE messages
 
 -- Thêm các vai trò mặc định (giữ nguyên như cũ)
 INSERT INTO roles (role_name)
-VALUES ('USER'),
-       ('ADMIN');
+VALUES ('ROLE_USER'),
+       ('ROLE_ADMIN');
 
 -- Message Attachments table
 CREATE TABLE message_attachments (
@@ -190,7 +190,7 @@ VALUES ('Nguyễn', 'Văn An', 'nguyenvanan@example.com',
        ('Trương', 'Minh Hưng', 'minhhung567@example.com',
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRVcC3CvGPeyIvCCZVPPNuw2_uI7Fr_s6QK-Q&s', 'Giáo viên',
         '1988-10-12', 'Nam', 'Giáo viên', '476 Đường Hai Bà Trưng, Nghệ An'),
-    ('Nguyễn', 'Quang Thịnh', 'quangthinh@example.com', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGHq9MWK8tFit566FFNdt7YtHX60g5ccTUhg&s', 'Lập trình viên', '1994-10-12', 'Nam', 'Lập trình viên', '176 Đường Hai Bà Trưng, Quảng Bình');
+       ('Nguyễn', 'Quang Thịnh', 'quangthinh@example.com', 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGHq9MWK8tFit566FFNdt7YtHX60g5ccTUhg&s', 'Lập trình viên', '1994-10-12', 'Nam', 'Lập trình viên', '176 Đường Hai Bà Trưng, Quảng Bình');
 INSERT INTO users (first_name, last_name, email, profile_picture_url, bio, date_of_birth, gender, occupation, address)
 VALUES ('Trần', 'Hồng Phúc', '142342@example.com',
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTtJ1R3JMyJK-5ypd9jA7FbSDyGb5Km8emnQ&s',
@@ -439,7 +439,7 @@ VALUES (1, 4, TRUE),
        (24, 4, TRUE),
        (25, 7, TRUE),
        (16,17, TRUE),
-       (17, 17, TRUE),
+       (17, 43, TRUE),
        (18, 25, TRUE),
        (19, 14, TRUE),
        (20, 13, TRUE),
@@ -535,7 +535,11 @@ VALUES (30, 7, false),
        (36, 8, false),
        (37, 8, false),
        (38, 7, TRUE),
-       (39, 8, TRUE);
+       (39, 8, TRUE),
+       (32, 4, TRUE),
+       (33, 4, TRUE),
+       (2, 9, TRUE);
+
 
 -- Thêm dữ liệu mẫu vào bảng posts
 INSERT INTO posts (user_id, content)
@@ -659,16 +663,16 @@ VALUES
 -- Thêm dữ liệu mẫu vào bảng messages
 INSERT INTO messages (sender_user_id, receiver_user_id, content, message_type, is_deleted, created_at, updated_at)
 VALUES
-(1, 2, 'Xin chào! Bạn khỏe không?', 'TEXT', FALSE, '2023-06-01 10:00:00', '2023-06-01 10:00:00'),
-(2, 1, 'Chào bạn! Tôi khỏe, còn bạn?', 'TEXT', FALSE, '2023-06-01 10:05:00', '2023-06-01 10:05:00'),
-(1, 2, 'Tôi cũng khỏe. Cảm ơn bạn!', 'TEXT', FALSE, '2023-06-01 10:10:00', '2023-06-01 10:10:00'),
-(3, 4, 'Bạn có rảnh không? Tôi cần hỏi về dự án.', 'TEXT', FALSE, '2023-06-02 14:30:00', '2023-06-02 14:30:00'),
-(4, 3, 'Tôi đang bận một chút. Có gì gấp không?', 'TEXT', FALSE, '2023-06-02 14:35:00', '2023-06-02 14:35:00'),
-(3, 4, 'Không gấp lắm. Khi nào rảnh bạn nhắn lại nhé.', 'TEXT', FALSE, '2023-06-02 14:40:00', '2023-06-02 14:40:00'),
-(5, 6, 'Chào bạn! Tôi là Ngọc Trung.', 'TEXT', FALSE, '2023-06-03 09:00:00', '2023-06-03 09:00:00'),
-(6, 5, 'Chào Trung! Rất vui được làm quen.', 'TEXT', FALSE, '2023-06-03 09:05:00', '2023-06-03 09:05:00'),
-(7, 8, 'Bạn có tham gia sự kiện tối nay không?', 'TEXT', FALSE, '2023-06-04 18:00:00', '2023-06-04 18:00:00'),
-(8, 7, 'Có, tôi sẽ đến. Gặp bạn ở đó nhé!', 'TEXT', FALSE, '2023-06-04 18:05:00', '2023-06-04 18:05:00');
+    (1, 2, 'Xin chào! Bạn khỏe không?', 'TEXT', FALSE, '2023-06-01 10:00:00', '2023-06-01 10:00:00'),
+    (2, 1, 'Chào bạn! Tôi khỏe, còn bạn?', 'TEXT', FALSE, '2023-06-01 10:05:00', '2023-06-01 10:05:00'),
+    (1, 2, 'Tôi cũng khỏe. Cảm ơn bạn!', 'TEXT', FALSE, '2023-06-01 10:10:00', '2023-06-01 10:10:00'),
+    (3, 4, 'Bạn có rảnh không? Tôi cần hỏi về dự án.', 'TEXT', FALSE, '2023-06-02 14:30:00', '2023-06-02 14:30:00'),
+    (4, 3, 'Tôi đang bận một chút. Có gì gấp không?', 'TEXT', FALSE, '2023-06-02 14:35:00', '2023-06-02 14:35:00'),
+    (3, 4, 'Không gấp lắm. Khi nào rảnh bạn nhắn lại nhé.', 'TEXT', FALSE, '2023-06-02 14:40:00', '2023-06-02 14:40:00'),
+    (5, 6, 'Chào bạn! Tôi là Ngọc Trung.', 'TEXT', FALSE, '2023-06-03 09:00:00', '2023-06-03 09:00:00'),
+    (6, 5, 'Chào Trung! Rất vui được làm quen.', 'TEXT', FALSE, '2023-06-03 09:05:00', '2023-06-03 09:05:00'),
+    (7, 8, 'Bạn có tham gia sự kiện tối nay không?', 'TEXT', FALSE, '2023-06-04 18:00:00', '2023-06-04 18:00:00'),
+    (8, 7, 'Có, tôi sẽ đến. Gặp bạn ở đó nhé!', 'TEXT', FALSE, '2023-06-04 18:05:00', '2023-06-04 18:05:00');
 
 
 

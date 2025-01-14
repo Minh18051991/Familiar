@@ -114,7 +114,25 @@ public class MessageService implements IMessageService {
         Message message = new Message();
         message.setSender(sender);
         message.setReceiver(receiver);
-        message.setContent(messageDTO.getContent());
+
+        // Xử lý nội dung tin nhắn
+        String content = messageDTO.getContent();
+        if (content != null) {
+            content = content.trim(); // Loại bỏ khoảng trắng đầu và cuối
+        }
+
+        // Nếu không có nội dung và có attachment, đặt content là "[Attachment]"
+        if ((content == null || content.isEmpty()) && 
+            (messageDTO.getAttachmentUrls() != null && !messageDTO.getAttachmentUrls().isEmpty())) {
+            content = "[Attachment]";
+        }
+
+        // Nếu vẫn không có nội dung và không có attachment, throw exception
+        if (content == null || content.isEmpty()) {
+            throw new IllegalArgumentException("Message must have either content or attachments");
+        }
+
+        message.setContent(content);
         message.setIsDeleted(false);
         message.setCreatedAt(LocalDateTime.now());
         message.setUpdatedAt(LocalDateTime.now());
