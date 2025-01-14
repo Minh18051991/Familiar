@@ -55,6 +55,34 @@ public class OtpService {
         emailService.sendResetPasswordEmail(user.getEmail(), user.getFirstName()+" "+user.getLastName(), otp);
     }
 
+
+    public boolean sendOtp(String email) {
+
+        String otp = generateOTP(); // Tạo mã OTP
+        LocalDateTime expiresAt = LocalDateTime.now().plusMinutes(1); // Thời gian hết hạn
+        Account account =  accountRepository.findByUserEmail(email);
+
+        // Lưu OTP vào cơ sở dữ liệu
+        Otp otpData = new Otp();
+        otpData.setUsername(account.getUsername());
+        otpData.setOtp(otp);
+        otpData.setExpiresAt(expiresAt);
+        otpRepository.save(otpData);
+
+
+
+        User user = userRepository.findByEmail(email);
+        if (user == null) {
+            return false;
+        }
+
+
+        emailService.sendResetPasswordEmail(user.getEmail(), user.getFirstName()+" "+user.getLastName(), otp);
+        return true;
+    }
+
+
+
     public boolean verifyOtp(String username, String otp) {
         Otp otpData = otpRepository.findByUsername(username);
 
