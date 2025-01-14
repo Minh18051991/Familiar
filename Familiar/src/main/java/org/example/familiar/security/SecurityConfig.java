@@ -26,12 +26,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // Cho phép OPTIONS
                         .requestMatchers("/api/auth/login", "/api/register/account/create",
-                                "/api/user/create", "/api/register/account/check-username", "api/user/checkEmail",
-                                "/ws/**","/ws/info/**"
+                                "/api/user/create", "/api/register/account/check-username", "api/user/checkEmail","/ws/**","/ws/info/**"
                         ).permitAll()
 //                        .requestMatchers("/api/user/list","/api/user/detail/{id}").hasAnyRole("ADMIN", "USER")
 //                        .requestMatchers("/api/user/update/{id}").hasRole("ADMIN")
-//                        .requestMatchers("/api/friendships/list/{id}").hasAnyRole("USER")
+//                        .requestMatchers("/api/friendships/list/**").hasAnyRole("USER")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);

@@ -53,4 +53,14 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(request, response);
     }
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        String path = request.getRequestURI();
+        return path.startsWith("/api/auth/login")
+                || path.startsWith("/api/register/account/create")
+                || path.startsWith("/api/user/create")
+                || path.startsWith("/api/register/account/check-username")
+                || path.startsWith("/api/user/checkEmail")
+                || path.equals("/ws");  // Thêm đường dẫn WebSocket vào đây
+    }
 }
