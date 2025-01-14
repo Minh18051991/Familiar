@@ -1,6 +1,7 @@
 package org.example.familiar.controller.otp;
 
 import org.example.familiar.model.Otp;
+import org.example.familiar.model.User;
 import org.example.familiar.service.otp.OtpService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,19 @@ public class OtpController {
         otpService.sendOtpToEmail(otp.getUsername());
         return ResponseEntity.ok("Mã OTP đã gửi đến email của bạn.");
     }
+
+    @PostMapping("/enter-otp-by-email")
+    public ResponseEntity<?> forgetPassword(@RequestBody User user) {
+        boolean check = otpService.sendOtp(user.getEmail());
+        if (check) {
+            return new ResponseEntity<>(check, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(check, HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+
 
     @PostMapping("/confirm-otp")
     public ResponseEntity<?> confirmOtp(@RequestBody Otp otp) {

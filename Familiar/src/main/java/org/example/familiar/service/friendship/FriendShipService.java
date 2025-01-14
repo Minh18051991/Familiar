@@ -146,4 +146,9 @@ public class FriendShipService implements IFriendsShipService {
         return "notFriend";
     }
 
+    @Override
+    public Page<UserDTO> mutualFriendList(Integer userId1, Integer userId2, Pageable pageable) {
+        return friendRepository.mutualFriendList(userId1, userId2, pageable);
+    }
+
 }
