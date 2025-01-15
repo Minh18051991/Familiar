@@ -31,13 +31,14 @@ public class CommentService implements ICommentService {
         } else {
             comment.setLevel(0);
         }
+        comment.setIsDeleted(false);
         Comment savedComment = commentRepository.save(comment);
         return convertToDTO(savedComment);
     }
 
     @Override
     public List<CommentDTO> getCommentsByPostId(Integer postId) {
-        List<Comment> rootComments = commentRepository.findByPostIdAndParentCommentIsNullOrderByCreatedAtDesc(postId);
+        List<Comment> rootComments = commentRepository.findByPostIdAndParentCommentIsNullAndIsDeletedFalseOrderByCreatedAtDesc(postId);
         List<CommentDTO> result = new ArrayList<>();
         for (Comment rootComment : rootComments) {
             CommentDTO rootDTO = convertToDTO(rootComment);
@@ -48,7 +49,7 @@ public class CommentService implements ICommentService {
     }
 
     private List<CommentDTO> getRepliesRecursively(Integer parentCommentId) {
-        List<Comment> replies = commentRepository.findByParentCommentIdOrderByCreatedAtAsc(parentCommentId);
+        List<Comment> replies = commentRepository.findByParentCommentIdAndIsDeletedFalseOrderByCreatedAtAsc(parentCommentId);
         List<CommentDTO> replyDTOs = new ArrayList<>();
         for (Comment reply : replies) {
             CommentDTO replyDTO = convertToDTO(reply);
@@ -60,7 +61,10 @@ public class CommentService implements ICommentService {
 
     @Override
     public void deleteComment(Integer commentId) {
-        commentRepository.deleteById(commentId);
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new RuntimeException("Comment not found"));
+        comment.setIsDeleted(true);
+        commentRepository.save(comment);
     }
 
     @Override
