@@ -75,4 +75,5 @@ public ResponseEntity<PostDTO> createPost(@RequestBody PostDTO postDTO) {
         Page<PostDTO> posts = postService.getPostsByUserId(userId, pageable);
         return ResponseEntity.ok(posts);
     }
+
 }
