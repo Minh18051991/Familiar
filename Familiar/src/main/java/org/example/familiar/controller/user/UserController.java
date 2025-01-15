@@ -6,9 +6,12 @@ import org.example.familiar.service.user.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @CrossOrigin("*")
@@ -58,5 +61,25 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/list")
+    public ResponseEntity<Page<User>> getAllUsers(
+            @RequestParam(required = false) String name,
+            @PageableDefault(size = 20) Pageable pageable) {
+        Page<User> users;
+        if (name != null && !name.trim().isEmpty()) {
+            users = userService.getAllActiveUsersByName(name.trim(), pageable);
+        } else {
+            users = userService.getAllUsers(pageable);
+        }
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    @PutMapping("/delete/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable("id") int id) {
+        User user = userService.getUserById(id);
+        userService.updateUser(user);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

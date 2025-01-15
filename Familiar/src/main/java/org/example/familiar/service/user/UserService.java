@@ -9,6 +9,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService implements IUserService {
     @Autowired
@@ -61,5 +63,20 @@ public class UserService implements IUserService {
             userDTO.setUserDateOfBirth(user.getDateOfBirth());
             return userDTO;
         });
+    }
+
+    @Override
+    public Page<User> getAllUsers(Pageable pageable) {
+        return userRepository.findAllActiveUsers(pageable);
+    }
+
+    @Override
+    public Page<User> getAllActiveUsersByName(String name, Pageable pageable) {
+        return userRepository.findAllActiveUsersByName(name, pageable);
+    }
+
+    public void updateUser(User user) {
+        user.setIsDeleted(true);
+        userRepository.save(user);
     }
 }
