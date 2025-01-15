@@ -30,7 +30,7 @@ public class SecurityConfig {
                                 "/ws/**","/ws/info/**"
                         ).permitAll()
 //                        .requestMatchers("/api/user/list","/api/user/detail/{id}").hasAnyRole("ADMIN", "USER")
-//                        .requestMatchers("/api/user/update/{id}").hasRole("ADMIN")
+                        .requestMatchers("/api/user/list","/api/user/delete/{id}").hasRole("ADMIN")
 //                        .requestMatchers("/api/friendships/list/{id}").hasAnyRole("USER")
                         .anyRequest().authenticated()
                 )
