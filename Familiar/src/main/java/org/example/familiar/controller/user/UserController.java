@@ -23,6 +23,13 @@ public class UserController {
 
     @PostMapping("/create")
     public ResponseEntity<?> authenticate(@RequestBody User user) throws Exception {
+        if (user.getProfilePictureUrl() == null){
+            if (user.getGender().equals("Nam")){
+                user.setProfilePictureUrl("https://static2.yan.vn/YanNews/2167221/202003/dan-mang-du-trend-thiet-ke-avatar-du-kieu-day-mau-sac-tu-anh-mac-dinh-b0de2bad.jpg");
+            }else if (user.getGender().equals("Nữ")){
+                user.setProfilePictureUrl("https://antimatter.vn/wp-content/uploads/2022/04/anh-avatar-trang-co-gai-toc-tem.jpg");
+            }
+        }
 
         userService.createUser(user);
         User newUser = userService.getUserByEmail(user.getEmail()); // Kiểm tra email đã tồn tại hay chưa
