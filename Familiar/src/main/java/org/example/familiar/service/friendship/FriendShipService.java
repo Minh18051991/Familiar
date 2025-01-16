@@ -31,7 +31,7 @@ public class FriendShipService implements IFriendsShipService {
         return friendRepository.searchNameFriendships(userId, searchName);
     }
 
-    @Override
+   /* @Override
     public Friendship sendFriendship(Integer userId1, Integer userId2) {
         Friendship friendship = friendRepository.findFriendshipByUserIds(userId1, userId2);
         if (friendship != null && !friendship.getIsDeleted()) {
@@ -52,7 +52,42 @@ public class FriendShipService implements IFriendsShipService {
         friendship1.setIsDeleted(false);
         friendship1.setIsAccepted(false);
         return friendRepository.save(friendship1);
+    }*/
+
+    @Override
+    public Friendship sendFriendship(Integer userId1, Integer userId2) {
+        Friendship friendship = friendRepository.findFriendshipByUserIds(userId1, userId2);
+
+        if (friendship != null && !friendship.getIsDeleted()) {
+            return friendship;
+        }
+
+        if (friendship != null && friendship.getIsDeleted()) {
+            if (!friendship.getUser1().getId().equals(userId1)) {
+                swapUsers(friendship);
+            }
+            friendship.setIsDeleted(false);
+            friendship.setIsAccepted(false);
+            return friendRepository.save(friendship);
+        }
+
+        User user1 = userRepository.findById(userId1).orElseThrow(() -> new IllegalArgumentException("User1 not found"));
+        User user2 = userRepository.findById(userId2).orElseThrow(() -> new IllegalArgumentException("User2 not found"));
+
+        Friendship newFriendship = new Friendship();
+        newFriendship.setUser1(user1);
+        newFriendship.setUser2(user2);
+        newFriendship.setIsDeleted(false);
+        newFriendship.setIsAccepted(false);
+        return friendRepository.save(newFriendship);
     }
+    
+    private void swapUsers(Friendship friendship) {
+        User temp = friendship.getUser1();
+        friendship.setUser1(friendship.getUser2());
+        friendship.setUser2(temp);
+    }
+
 
     @Override
     public Friendship deleteFriendShip(Integer userId1, Integer userId2) {
