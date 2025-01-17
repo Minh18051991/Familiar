@@ -47,7 +47,7 @@ public class SecurityConfig {
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowedOrigins("http://localhost:3000")
+                        .allowedOrigins("http://localhost:3000","http://10.10.8.14:3000")
                         .allowedHeaders("*")
                         .exposedHeaders("Authorization", "Content-Type");
             }
