@@ -30,30 +30,7 @@ public class FriendShipService implements IFriendsShipService {
     public List<UserDTO> searchNameFriendships(Integer userId, String searchName) {
         return friendRepository.searchNameFriendships(userId, searchName);
     }
-
-   /* @Override
-    public Friendship sendFriendship(Integer userId1, Integer userId2) {
-        Friendship friendship = friendRepository.findFriendshipByUserIds(userId1, userId2);
-        if (friendship != null && !friendship.getIsDeleted()) {
-            return friendship;
-        }
-
-        if (friendship != null && friendship.getIsDeleted()) {
-            friendship.setIsDeleted(false);
-            friendship.setIsAccepted(false);
-            return friendRepository.save(friendship);
-        }
-
-        Friendship friendship1 = new Friendship();
-        User user1 = userRepository.findById(userId1).orElse(null);
-        User user2 = userRepository.findById(userId2).orElse(null);
-        friendship1.setUser1(user1);
-        friendship1.setUser2(user2);
-        friendship1.setIsDeleted(false);
-        friendship1.setIsAccepted(false);
-        return friendRepository.save(friendship1);
-    }*/
-
+    
     @Override
     public Friendship sendFriendship(Integer userId1, Integer userId2) {
         Friendship friendship = friendRepository.findFriendshipByUserIds(userId1, userId2);
@@ -81,7 +58,7 @@ public class FriendShipService implements IFriendsShipService {
         newFriendship.setIsAccepted(false);
         return friendRepository.save(newFriendship);
     }
-    
+
     private void swapUsers(Friendship friendship) {
         User temp = friendship.getUser1();
         friendship.setUser1(friendship.getUser2());
