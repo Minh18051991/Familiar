@@ -5,10 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0f6e613e-3919-426c-8081-d061842454d3" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Familiar/src/main/java/org/example/familiar/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Familiar/src/main/java/org/example/familiar/config/WebConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Familiar/src/main/java/org/example/familiar/config/WebSocketConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Familiar/src/main/java/org/example/familiar/config/WebSocketConfig.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Familiar/src/main/java/org/example/familiar/controller/PostController.java" beforeDir="false" afterPath="$PROJECT_DIR$/Familiar/src/main/java/org/example/familiar/controller/PostController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Familiar/src/main/java/org/example/familiar/security/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Familiar/src/main/java/org/example/familiar/security/SecurityConfig.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -24,12 +21,12 @@
     &quot;assignee&quot;: &quot;hungnguyen988&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/Minh18051991/Familiar.git&quot;,
-    &quot;accountId&quot;: &quot;baeeb99f-a5b5-4546-b6a2-d462398c56d0&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/Minh18051991/Familiar.git",
+    "accountId": "0d7308d7-49ec-424e-8140-edac1ee51d8d"
   }
-}</component>
+}]]></component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
@@ -44,10 +41,10 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "hung",
+    "git-widget-placeholder": "luu1",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "E:/codegym/module6/Familiar",
+    "last_opened_file_path": "D:/codegym/project_familiar_md6/back_end/Familiar/Familiar",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -78,7 +75,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-WS-241.18034.50" />
+        <option value="bundled-jdk-9823dce3aa75-28b599e66164-intellij.indexing.shared.core-IU-242.22855.74" />
+        <option value="bundled-js-predefined-d6986cc7102b-5c90d61e3bab-JavaScript-IU-242.22855.74" />
       </set>
     </attachedChunks>
   </component>
@@ -95,6 +93,7 @@
       <workItem from="1735549144050" duration="560000" />
       <workItem from="1735567497467" duration="30000" />
       <workItem from="1737085798732" duration="49000" />
+      <workItem from="1737521974752" duration="144000" />
     </task>
     <servers />
   </component>
